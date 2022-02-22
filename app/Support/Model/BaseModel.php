@@ -13,4 +13,5 @@ class BaseModel extends Model
 {
     use HasFactory;
     use IdeHelpers;
+    use ListHelpers;
 }

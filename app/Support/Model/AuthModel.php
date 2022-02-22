@@ -17,4 +17,5 @@ class AuthModel extends User
     use HasApiTokens;
     use Notifiable;
     use IdeHelpers;
+    use ListHelpers;
 }
