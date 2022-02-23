@@ -22,9 +22,6 @@ use Illuminate\Database\Query\Expression;
  * @mixin Builder
  * @mixin QueryBuild
  *
- * @method static Model fill(array $attributes)
- * @method static Model forceFill(array $attributes)
- *
  * @method static Model|object|Builder|null first(array|string $columns = ['*'])
  * @method static Builder withGlobalScope(string $identifier, Scope|Closure $scope)
  * @method static Builder withoutGlobalScope(Scope|string $scope)
