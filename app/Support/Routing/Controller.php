@@ -26,7 +26,7 @@ class Controller extends \Illuminate\Routing\Controller
      */
     protected function success(string|Model|array $message = null, array|Model|string $data = null): JsonResponse
     {
-        return Response::success($message, $data);
+        return ApiResponse::success($message, $data);
     }
 
     /**
@@ -40,6 +40,6 @@ class Controller extends \Illuminate\Routing\Controller
      */
     protected function error(string $message = null, int $code = -1, mixed $data = null): JsonResponse
     {
-        return Response::error($message, $code, $data);
+        return ApiResponse::error($message, $code, $data);
     }
 }

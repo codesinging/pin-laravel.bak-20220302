@@ -9,7 +9,7 @@ namespace App\Support\Routing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
-class Response
+class ApiResponse
 {
     /**
      * 返回成功的 JSON 响应数据
