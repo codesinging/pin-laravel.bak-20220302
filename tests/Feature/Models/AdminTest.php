@@ -13,10 +13,10 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $seeder = AdminSeeder::class;
+
     public function testPasswordAttribute()
     {
-        $this->seed(AdminSeeder::class);
-
         $admin = Admin::first();
 
         $admin->fill([
@@ -39,8 +39,6 @@ class AdminTest extends TestCase
 
     public function testIsSuper()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $superAdmin */
         $superAdmin = Admin::where('super', true)->first();
 
@@ -52,8 +50,6 @@ class AdminTest extends TestCase
 
     public function testPasswordHidden()
     {
-        $this->seed(AdminSeeder::class);
-
         $admin = Admin::first();
 
         self::assertArrayHasKey('password', $admin);

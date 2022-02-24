@@ -12,10 +12,10 @@ class ListHelpersTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $seeder = AdminSeeder::class;
+
     public function testListerWhenPageable()
     {
-        $this->seed(AdminSeeder::class);
-
         request()->merge([
             'pageable' => true,
             'size' => 1,
@@ -40,8 +40,6 @@ class ListHelpersTest extends TestCase
 
     public function testListerWhenNotPageable()
     {
-        $this->seed(AdminSeeder::class);
-
         request()->merge([
             'pageable' => false,
         ]);

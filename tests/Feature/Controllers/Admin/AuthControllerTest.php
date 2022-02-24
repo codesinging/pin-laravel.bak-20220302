@@ -16,10 +16,10 @@ class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $seeder = AdminSeeder::class;
+
     public function testLogin()
     {
-        $this->seed(AdminSeeder::class);
-
         // 测试账号和密码验证
         $this->postJson('api/admin/auth/login', [])
             ->assertOk()
@@ -56,8 +56,6 @@ class AuthControllerTest extends TestCase
 
     public function testUser()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $admin */
         $admin = Admin::first();
 

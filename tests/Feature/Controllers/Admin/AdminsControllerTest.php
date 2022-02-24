@@ -14,10 +14,10 @@ class AdminsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $seeder = AdminSeeder::class;
+
     public function testIndex()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $admin */
         $admin = Admin::first();
 
@@ -30,8 +30,6 @@ class AdminsControllerTest extends TestCase
 
     public function testStoreValidation()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $admin */
         $admin = Admin::first();
 
@@ -56,7 +54,6 @@ class AdminsControllerTest extends TestCase
 
     public function testStore()
     {
-        $this->seed(AdminSeeder::class);
         self::assertCount(2, Admin::all());
 
         /** @var Admin $admin */
@@ -81,8 +78,6 @@ class AdminsControllerTest extends TestCase
 
     public function testUpdateValidation()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $superAdmin */
         $superAdmin = Admin::where('super', true)->first();
 
@@ -101,8 +96,6 @@ class AdminsControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $superAdmin */
         $superAdmin = Admin::where('super', true)->first();
 
@@ -168,8 +161,6 @@ class AdminsControllerTest extends TestCase
 
     public function testShow()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $admin */
         $admin = Admin::first();
 
@@ -182,8 +173,6 @@ class AdminsControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $this->seed(AdminSeeder::class);
-
         /** @var Admin $admin */
         $admin = Admin::where('super', false)->first();
 
