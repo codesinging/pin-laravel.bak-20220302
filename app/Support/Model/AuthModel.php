@@ -22,4 +22,5 @@ class AuthModel extends User
     use HasApiTokens;
     use Notifiable;
     use ListHelpers;
+    use SerializeDate;
 }
