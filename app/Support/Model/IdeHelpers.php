@@ -133,7 +133,6 @@ use Illuminate\Database\Query\Expression;
  * @method static bool insert(array $values)
  * @method static int insertOrIgnore(array $values)
  * @method static int insertGetId(array $values, string|null $sequence = null)
- * @method static int delete(mixed $id = null)
  * @method static void truncate()
  */
 trait IdeHelpers

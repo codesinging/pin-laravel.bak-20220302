@@ -9,4 +9,8 @@ use App\Http\Controllers\Admin;
 
 Route::get('test', fn() => 'admin');
 
-Route::apiResource('admins', Admin\AdminsController::class);
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::apiResource('admins', Admin\AdminsController::class);
+
+});
