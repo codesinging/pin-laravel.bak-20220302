@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
-use App\Http\Requests\Admin\AdminStoreRequest;
-use App\Http\Requests\Admin\AdminUpdateRequest;
+use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
@@ -30,12 +30,12 @@ class AdminsController extends Controller
     /**
      * @title 新增管理员
      *
-     * @param AdminStoreRequest $request
+     * @param StoreAdminRequest $request
      * @param Admin $admin
      *
      * @return JsonResponse
      */
-    public function store(AdminStoreRequest $request, Admin $admin): JsonResponse
+    public function store(StoreAdminRequest $request, Admin $admin): JsonResponse
     {
         return $admin->fill($request->all())->save()
             ? $this->success('新增成功')
@@ -45,12 +45,12 @@ class AdminsController extends Controller
     /**
      * @title 更新管理员
      *
-     * @param AdminUpdateRequest $request
+     * @param UpdateAdminRequest $request
      * @param Admin $admin
      *
      * @return JsonResponse
      */
-    public function update(AdminUpdateRequest $request, Admin $admin): JsonResponse
+    public function update(UpdateAdminRequest $request, Admin $admin): JsonResponse
     {
         if ($admin->isSuper() && $request->user()['id'] !== $admin['id']) {
             return $this->error('无权限', ErrorCode::SUPER_ADMIN_UPDATE_ERROR);
