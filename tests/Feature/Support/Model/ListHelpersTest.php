@@ -12,8 +12,6 @@ class ListHelpersTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected string $seeder = AdminSeeder::class;
-
     public function testListerWhenPageable()
     {
         request()->merge([

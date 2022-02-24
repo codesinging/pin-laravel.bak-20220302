@@ -17,4 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('admins', Admin\AdminsController::class);
 
+    Route::apiResource('menus', Admin\MenuController::class);
+
 });

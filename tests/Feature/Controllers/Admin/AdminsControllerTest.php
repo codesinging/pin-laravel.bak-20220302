@@ -4,7 +4,6 @@ namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
-use Database\Seeders\AdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
@@ -13,8 +12,6 @@ use Tests\TestCase;
 class AdminsControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected string $seeder = AdminSeeder::class;
 
     public function testIndex()
     {
