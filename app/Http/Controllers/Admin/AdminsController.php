@@ -9,6 +9,9 @@ use App\Models\Admin;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
+/**
+ * @title 管理员管理
+ */
 class AdminsController extends Controller
 {
     /**
