@@ -7,7 +7,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
 
-Route::get('test', fn() => 'admin');
+Route::get('test', [Admin\TestController::class, 'index']);
 
 Route::post('auth/login', [Admin\AuthController::class, 'login']);
 
