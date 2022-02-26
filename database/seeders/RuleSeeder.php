@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\AuthRule;
+use App\Models\Rule;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Route;
 use ReflectionException;
 
-class AuthRuleSeeder extends Seeder
+class RuleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -61,6 +61,6 @@ class AuthRuleSeeder extends Seeder
 
     protected function syncDatabase(string $name, array $data)
     {
-        (new AuthRule())->updateOrCreate(['name' => $name], $data);
+        (new Rule())->updateOrCreate(['name' => $name], $data);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
-class AuthRuleControllerTest extends TestCase
+class RuleControllerTest extends TestCase
 {
     use RefreshDatabase;
     use ActingAsAdmin;
@@ -15,7 +15,7 @@ class AuthRuleControllerTest extends TestCase
     public function testIndex()
     {
         $this->actingAsAdmin()
-            ->get('api/admin/auth_rules')
+            ->get('api/admin/rules')
             ->assertOk();
     }
 }

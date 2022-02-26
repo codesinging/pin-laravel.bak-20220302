@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\AuthRule;
+use App\Models\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class AuthRuleController extends Controller
+class RuleController extends Controller
 {
-    public function index(AuthRule $authRule, Request $request): JsonResponse
+    public function index(Rule $authRule, Request $request): JsonResponse
     {
         $lister = $authRule->lister(function (Builder $builder) use ($request) {
             if ($type = $request->get('type')) {

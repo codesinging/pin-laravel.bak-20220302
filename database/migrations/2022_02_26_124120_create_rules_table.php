@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('auth_rules', function (Blueprint $table) {
+        Schema::create('rules', function (Blueprint $table) {
             $table->id();
 
             $table->string("name")->unique();
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_rules');
+        Schema::dropIfExists('rules');
     }
 };
