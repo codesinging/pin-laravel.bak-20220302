@@ -4,9 +4,17 @@ namespace App\Models;
 
 use App\Support\Model\AuthModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends AuthModel
 {
+    use HasRoles;
+
+    /**
+     * 认证守卫名
+     */
+    const GUARD = 'sanctum';
+
     protected $fillable = [
         'username',
         'name',
