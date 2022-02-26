@@ -19,4 +19,5 @@ class BaseModel extends Model
     use HasFactory;
     use ListHelpers;
     use SerializeDate;
+    use SanitizeHelpers;
 }

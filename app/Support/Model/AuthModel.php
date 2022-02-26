@@ -23,4 +23,5 @@ class AuthModel extends User
     use Notifiable;
     use ListHelpers;
     use SerializeDate;
+    use SanitizeHelpers;
 }
