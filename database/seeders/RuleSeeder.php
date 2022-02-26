@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Rule;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,25 +20,25 @@ class RuleSeeder extends Seeder
      */
     public function run()
     {
-        $this->parseRules('api/admin');
+        $this->parseRules('api/admin', Admin::GUARD);
     }
 
     /**
      * @throws ReflectionException
      */
-    protected function parseRules(string $prefix)
+    protected function parseRules(string $prefix, string $guard)
     {
         $routes = RouteParser::routes($prefix);
 
         foreach ($routes as $route) {
-            $this->parseRoute($route);
+            $this->parseRoute($route, $guard);
         }
     }
 
     /**
      * @throws ReflectionException
      */
-    protected function parseRoute(Route $route)
+    protected function parseRoute(Route $route, string $guard)
     {
         $parser = new RouteParser($route);
 
@@ -48,6 +49,7 @@ class RuleSeeder extends Seeder
 
             $data = [
                 'type' => $type,
+                'guard' => $guard,
                 'module' => $parser->module(),
                 'controller' => $parser->controller(),
                 'action' => $parser->action(),

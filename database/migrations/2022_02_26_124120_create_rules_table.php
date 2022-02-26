@@ -18,6 +18,7 @@ return new class extends Migration
 
             $table->string("name")->unique();
             $table->string("type");
+            $table->string("guard");
             $table->string("module");
             $table->string("controller");
             $table->string("action");

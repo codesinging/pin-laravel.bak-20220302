@@ -9,6 +9,7 @@ class Rule extends BaseModel
     protected $fillable = [
         'name',
         'type',
+        'guard',
         'module',
         'controller',
         'action',
