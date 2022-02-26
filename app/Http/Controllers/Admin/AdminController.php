@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 /**
  * @title 管理员管理
  */
-class AdminsController extends Controller
+class AdminController extends Controller
 {
     /**
      * @title 获取管理员列表

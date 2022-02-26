@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class AdminsControllerTest extends TestCase
+class AdminControllerTest extends TestCase
 {
     use RefreshDatabase;
 

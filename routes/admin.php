@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('auth/user', [Admin\AuthController::class, 'user']);
 
-    Route::apiResource('admins', Admin\AdminsController::class);
+    Route::apiResource('admins', Admin\AdminController::class);
 
     Route::apiResource('menus', Admin\MenuController::class);
 
