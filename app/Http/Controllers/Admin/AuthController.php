@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @title 用户认证
+ * @title 管理员认证
  */
 class AuthController extends Controller
 {
@@ -56,7 +56,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @title 获取认证用户
+     * @title 获取认证管理员
      *
      * @param Request $request
      *

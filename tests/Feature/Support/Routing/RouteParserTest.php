@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Support\Routing\RouteParser;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
+use ReflectionException;
 use Tests\TestCase;
 
 class RouteParserTest extends TestCase
@@ -33,6 +34,9 @@ class RouteParserTest extends TestCase
         self::assertInstanceOf(Route::class, RouteParser::route($this->routeAction));
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function testRouteParser()
     {
         $parser = new RouteParser($this->routeAction);
@@ -40,7 +44,7 @@ class RouteParserTest extends TestCase
         self::assertEquals('Admin', $parser->module());
         self::assertEquals('Auth', $parser->controller());
         self::assertEquals('login', $parser->action());
-        self::assertEquals('用户认证', $parser->controllerTitle());
+        self::assertEquals('管理员认证', $parser->controllerTitle());
         self::assertEquals('管理员登录', $parser->actionTitle());
     }
 }

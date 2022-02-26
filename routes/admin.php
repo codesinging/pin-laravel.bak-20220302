@@ -19,4 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('menus', Admin\MenuController::class);
 
+    Route::get('auth_rules', [Admin\AuthRuleController::class, 'index']);
+
 });

@@ -16,14 +16,16 @@ class RouteParser
 {
     protected RouteClass $route;
 
-    protected string $module;
-    protected string $controller;
-    protected string $controllerTitle;
-    protected string $action;
-    protected string $actionTitle;
+    protected ?string $module;
+    protected ?string $controller;
+    protected ?string $controllerTitle;
+    protected ?string $action;
+    protected ?string $actionTitle;
 
     /**
      * @param RouteClass|string $route
+     *
+     * @throws ReflectionException
      */
     public function __construct(RouteClass|string $route)
     {
@@ -74,7 +76,7 @@ class RouteParser
         $name = Str::after($class, 'App\\Http\\Controllers\\');
         $name = Str::beforeLast($name, 'Controller');
 
-        if (str_contains($name, '\\')){
+        if (str_contains($name, '\\')) {
             $this->controller = Str::afterLast($name, '\\');
             $this->module = Str::beforeLast($name, '\\');
         } else {
@@ -84,41 +86,41 @@ class RouteParser
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function module(): string
+    public function module(): ?string
     {
         return $this->module;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function controller(): string
+    public function controller(): ?string
     {
         return $this->controller;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function controllerTitle(): string
+    public function controllerTitle(): ?string
     {
         return $this->controllerTitle;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function action(): string
+    public function action(): ?string
     {
         return $this->action;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function actionTitle(): string
+    public function actionTitle(): ?string
     {
         return $this->actionTitle;
     }
