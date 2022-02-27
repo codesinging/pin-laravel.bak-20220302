@@ -170,13 +170,26 @@ class AdminControllerTest extends TestCase
 
     public function testDestroy()
     {
+        // 删除一般管理员
         /** @var Admin $admin */
         $admin = Admin::where('super', false)->first();
 
         $this->actingAs($admin)
             ->deleteJson('api/admin/admins/'. $admin['id'])
+            ->assertJsonPath('code', 0)
             ->assertOk();
 
         self::assertModelMissing($admin);
+
+        // 超级管理员无法删除
+        /** @var Admin $admin */
+        $admin = Admin::where('super', true)->first();
+
+        $this->actingAs($admin)
+            ->deleteJson('api/admin/admins/'. $admin['id'])
+            ->assertJsonPath('code', ErrorCode::SUPER_ADMIN_DELETE_ERROR)
+            ->assertOk();
+
+        self::assertModelExists($admin);
     }
 }
