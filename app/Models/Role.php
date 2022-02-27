@@ -45,7 +45,7 @@ class Role extends BaseModel
     {
         $permissionRole = PermissionRole::create([
             'name' => $data['name'],
-            'guard_name' => $guard,
+            'guard_name' => $guard || ($data['guard_name'] ?? ''),
         ]);
 
         $role = $this->create($this->sanitize($data));
@@ -56,6 +56,7 @@ class Role extends BaseModel
 
     /**
      * 同步角色
+     *
      * @param Role $role
      * @param array $data
      * @param string $guard
@@ -67,7 +68,7 @@ class Role extends BaseModel
         $role->fill($this->sanitize($data))->save();
         $role->role()->update([
             'name' => $data['name'],
-            'guard_name' => $guard,
+            'guard_name' => $guard || ($data['guard_name'] ?? ''),
         ]);
         $role->refresh();
 
