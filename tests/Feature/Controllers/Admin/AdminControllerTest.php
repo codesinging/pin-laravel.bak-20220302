@@ -7,18 +7,17 @@ use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
 class AdminControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use ActingAsAdmin;
 
     public function testIndex()
     {
-        /** @var Admin $admin */
-        $admin = Admin::first();
-
-        $this->actingAs($admin)
+        $this->actingAsAdmin()
             ->getJson('api/admin/admins')
             ->assertOk()
             ->assertJsonPath('code', 0)
@@ -27,10 +26,7 @@ class AdminControllerTest extends TestCase
 
     public function testStoreValidation()
     {
-        /** @var Admin $admin */
-        $admin = Admin::first();
-
-        $this->actingAs($admin)
+        $this->actingAsAdmin()
             ->postJson('api/admin/admins', [
                 'username' => 'admin1'
             ])
@@ -38,7 +34,7 @@ class AdminControllerTest extends TestCase
             ->assertJsonStructure(['data' => ['name', 'password']])
             ->assertOk();
 
-        $this->actingAs($admin)
+        $this->actingAsAdmin()
             ->postJson('api/admin/admins', [
                 'username' => 'admin',
                 'name' => 'Admin',
@@ -53,10 +49,7 @@ class AdminControllerTest extends TestCase
     {
         self::assertCount(2, Admin::all());
 
-        /** @var Admin $admin */
-        $admin = Admin::first();
-
-        $this->actingAs($admin)
+        $this->actingAsAdmin()
             ->postJson('api/admin/admins', [
                 'username' => 'admin1',
                 'name' => 'Admin1',
@@ -75,13 +68,9 @@ class AdminControllerTest extends TestCase
 
     public function testUpdateValidation()
     {
-        /** @var Admin $superAdmin */
-        $superAdmin = Admin::where('super', true)->first();
-
-        /** @var Admin $commonAdmin */
-        $commonAdmin = Admin::where('super', false)->first();
-
-        $this->actingAs($superAdmin)
+        $commonAdmin = $this->commonAdmin();
+        $superAdmin = $this->superAdmin();
+        $this->actingAsSuperAdmin()
             ->putJson('api/admin/admins/' . $commonAdmin['id'], [
                 'username' => $superAdmin['username'],
                 'name' => $superAdmin['name'],
@@ -93,11 +82,8 @@ class AdminControllerTest extends TestCase
 
     public function testUpdate()
     {
-        /** @var Admin $superAdmin */
-        $superAdmin = Admin::where('super', true)->first();
-
-        /** @var Admin $commonAdmin */
-        $commonAdmin = Admin::where('super', false)->first();
+        $superAdmin = $this->superAdmin();
+        $commonAdmin = $this->commonAdmin();
 
         // 测试修改登录账号和名称，并未修改密码
         $this->actingAs($superAdmin)
@@ -158,8 +144,7 @@ class AdminControllerTest extends TestCase
 
     public function testShow()
     {
-        /** @var Admin $admin */
-        $admin = Admin::first();
+        $admin = $this->commonAdmin();
 
         $this->actingAs($admin)
             ->getJson('api/admin/admins/' . $admin['id'])
@@ -171,8 +156,7 @@ class AdminControllerTest extends TestCase
     public function testDestroy()
     {
         // 删除一般管理员
-        /** @var Admin $admin */
-        $admin = Admin::where('super', false)->first();
+        $admin = $this->commonAdmin();
 
         $this->actingAs($admin)
             ->deleteJson('api/admin/admins/'. $admin['id'])
@@ -182,8 +166,7 @@ class AdminControllerTest extends TestCase
         self::assertModelMissing($admin);
 
         // 超级管理员无法删除
-        /** @var Admin $admin */
-        $admin = Admin::where('super', true)->first();
+        $admin = $this->superAdmin();
 
         $this->actingAs($admin)
             ->deleteJson('api/admin/admins/'. $admin['id'])
