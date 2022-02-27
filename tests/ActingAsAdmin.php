@@ -20,22 +20,26 @@ trait ActingAsAdmin
         return $this;
     }
 
+    protected function superAdmin(): Admin
+    {
+        return (new Admin())->where('super', true)->first();
+    }
+
+    protected function commonAdmin(): Admin
+    {
+        return (new Admin())->where('super', false)->first();
+    }
+
     protected function actingAsSuperAdmin(): static
     {
-        /** @var Admin $admin */
-        $admin = (new Admin())->where('super', true)->first();
-
-        $this->actingAs($admin);
+        $this->actingAs($this->superAdmin());
 
         return $this;
     }
 
     protected function actingAsCommonAdmin(): static
     {
-        /** @var Admin $admin */
-        $admin = (new Admin())->where('super', false)->first();
-
-        $this->actingAs($admin);
+        $this->actingAs($this->commonAdmin());
 
         return $this;
     }
