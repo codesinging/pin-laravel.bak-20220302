@@ -23,9 +23,54 @@ class Role extends BaseModel
         'role'
     ];
 
+    /**
+     * Permission role
+     *
+     * @return BelongsTo
+     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(PermissionRole::class, 'permission_role_id');
     }
 
+    /**
+     * 新增角色
+     *
+     * @param array $data
+     * @param string $guard
+     *
+     * @return Role
+     */
+    public function store(array $data, string $guard = ''): Role
+    {
+        $permissionRole = PermissionRole::create([
+            'name' => $data['name'],
+            'guard_name' => $guard,
+        ]);
+
+        $role = $this->create($this->sanitize($data));
+        $role->role()->associate($permissionRole)->save();
+
+        return $role;
+    }
+
+    /**
+     * 同步角色
+     * @param Role $role
+     * @param array $data
+     * @param string $guard
+     *
+     * @return Role
+     */
+    public function sync(Role $role, array $data, string $guard = ''): Role
+    {
+        $role->fill($this->sanitize($data))->save();
+        $role->role()->update([
+            'name' => $data['name'],
+            'guard_name' => $guard,
+        ]);
+        $role->refresh();
+
+        return $role;
+    }
 }

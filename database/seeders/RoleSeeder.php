@@ -6,8 +6,6 @@ use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
-use Spatie\Permission\Models\Role as PermissionRole;
 
 class RoleSeeder extends Seeder
 {
@@ -19,11 +17,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
         foreach ($this->items() as $item) {
-            $permissionRole = PermissionRole::create(Arr::only($item, ['name', 'guard_name']));
-
-            $role = Role::create(Arr::only($item, ['description']));
-            $role->role()->associate($permissionRole);
-            $role->save();
+            (new Role())->store($item, $item['guard_name']);
         }
     }
 

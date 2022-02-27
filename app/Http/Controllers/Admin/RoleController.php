@@ -7,7 +7,6 @@ use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role as PermissionRole;
 
 /**
  * @title 角色管理
@@ -35,16 +34,12 @@ class RoleController extends Controller
      *
      * @param RoleRequest $request
      * @param Role $role
-     * @param PermissionRole $permissionRole
      *
      * @return JsonResponse
      */
-    public function store(RoleRequest $request, Role $role, PermissionRole $permissionRole): JsonResponse
+    public function store(RoleRequest $request, Role $role): JsonResponse
     {
-        $permissionRole->fill(array_merge($request->only(['name']), ['guard_name' => Admin::GUARD]))->save();
-        $role->fill($role->sanitize($request));
-        $role->role()->associate($permissionRole);
-        $role->save();
+        $role = $role->store( $request->all(), Admin::GUARD);
 
         return $this->success('新增角色成功', $role);
     }
@@ -59,9 +54,7 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $role): JsonResponse
     {
-        $role->fill($role->sanitize($request))->save();
-        $role->role()->update($request->only(['name']));
-        $role->refresh();
+        $role = $role->sync($role, $request->all(), Admin::GUARD);
 
         return $this->success('更新角色成功', $role);
     }
