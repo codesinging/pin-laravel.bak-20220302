@@ -12,9 +12,6 @@ class Admin extends AuthModel
 
     protected string $guard_name = 'sanctum';
 
-    /**
-     * 认证守卫
-     */
     const GUARD = 'sanctum';
 
     protected $fillable = [

@@ -15,6 +15,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('auth/user', [Admin\AuthController::class, 'user']);
 
+    Route::get('admins/permissions/{admin}', [Admin\AdminController::class, 'permissions']);
+    Route::post('admins/give_permissions/{admin}', [Admin\AdminController::class, 'givePermissions']);
+    Route::post('admins/revoke_permissions/{admin}', [Admin\AdminController::class, 'revokePermissions']);
+    Route::post('admins/sync_permissions/{admin}', [Admin\AdminController::class, 'syncPermissions']);
     Route::apiResource('admins', Admin\AdminController::class);
 
     Route::apiResource('menus', Admin\MenuController::class);

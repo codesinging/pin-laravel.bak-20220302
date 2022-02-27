@@ -7,17 +7,13 @@
 namespace Tests;
 
 use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 
 trait ActingAsAdmin
 {
-    protected function actingAsAdmin(): static
+    protected function admin(): Admin
     {
-        /** @var Admin $admin */
-        $admin = (new Admin())->first();
-
-        $this->actingAs($admin);
-
-        return $this;
+        return (new Admin())->first();
     }
 
     protected function superAdmin(): Admin
@@ -30,17 +26,39 @@ trait ActingAsAdmin
         return (new Admin())->where('super', false)->first();
     }
 
+    protected function actingAsAdmin(): static
+    {
+        $this->actingAs($this->admin());
+        return $this;
+    }
+
     protected function actingAsSuperAdmin(): static
     {
         $this->actingAs($this->superAdmin());
-
         return $this;
     }
 
     protected function actingAsCommonAdmin(): static
     {
         $this->actingAs($this->commonAdmin());
+        return $this;
+    }
 
+    protected function sanctumActingAsAdmin(array $ability = ['*']): static
+    {
+        Sanctum::actingAs($this->admin(), $ability);
+        return $this;
+    }
+
+    protected function sanctumActingAsSuperAdmin(array $ability = ['*']): static
+    {
+        Sanctum::actingAs($this->superAdmin(), $ability);
+        return $this;
+    }
+
+    protected function sanctumActingAsCommonAdmin(array $ability = ['*']): static
+    {
+        Sanctum::actingAs($this->commonAdmin(), $ability);
         return $this;
     }
 }

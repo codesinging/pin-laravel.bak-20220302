@@ -4,9 +4,12 @@ namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Models\Permission;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
@@ -159,7 +162,7 @@ class AdminControllerTest extends TestCase
         $admin = $this->commonAdmin();
 
         $this->actingAs($admin)
-            ->deleteJson('api/admin/admins/'. $admin['id'])
+            ->deleteJson('api/admin/admins/' . $admin['id'])
             ->assertJsonPath('code', 0)
             ->assertOk();
 
@@ -169,10 +172,142 @@ class AdminControllerTest extends TestCase
         $admin = $this->superAdmin();
 
         $this->actingAs($admin)
-            ->deleteJson('api/admin/admins/'. $admin['id'])
+            ->deleteJson('api/admin/admins/' . $admin['id'])
             ->assertJsonPath('code', ErrorCode::SUPER_ADMIN_DELETE_ERROR)
             ->assertOk();
 
         self::assertModelExists($admin);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGivePermissions()
+    {
+        $testPermissions = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($testPermissions as $testPermission) {
+            Permission::create($testPermission);
+        }
+
+        $commonAdmin = $this->commonAdmin();
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/give_permissions/' . $commonAdmin['id'], ['permissions' => 'test1'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/give_permissions/' . $commonAdmin['id'], ['permissions' => ['test2', 'test3']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $commonAdmin->refresh();
+
+        self::assertTrue($commonAdmin->hasAllPermissions(['test1', 'test2', 'test3']));
+
+        self::assertFalse($commonAdmin->hasPermissionTo('test4'));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testRevokePermissions()
+    {
+        $testPermissions = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($testPermissions as $testPermission) {
+            Permission::create($testPermission);
+        }
+
+        $admin = $this->admin();
+
+        $admin->givePermissionTo(['test1', 'test2', 'test3']);
+
+        self::assertTrue($admin->hasAllPermissions(['test1', 'test2', 'test3']));
+        self::assertFalse($admin->hasPermissionTo('test4'));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/revoke_permissions/' . $admin['id'], ['permissions' => 'test1'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/revoke_permissions/' . $admin['id'], ['permissions' => ['test2', 'test3']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertFalse($admin->hasAnyPermission(['test1', 'test2', 'test3', 'test4']));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testSyncPermissions()
+    {
+        $testPermissions = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($testPermissions as $testPermission) {
+            Permission::create($testPermission);
+        }
+
+        $admin = $this->admin();
+
+        $admin->givePermissionTo(['test1', 'test3']);
+
+        self::assertTrue($admin->hasAllPermissions(['test1', 'test3']));
+        self::assertFalse($admin->hasAnyPermission(['test2', 'test4']));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/sync_permissions/' . $admin['id'], ['permissions' => ['test2', 'test3']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllPermissions(['test2', 'test3']));
+        self::assertFalse($admin->hasAnyPermission(['test1', 'test4']));
+    }
+
+    public function testPermissions()
+    {
+        $testPermissions = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($testPermissions as $testPermission) {
+            Permission::create($testPermission);
+        }
+
+        $admin = $this->admin();
+
+        $admin->givePermissionTo(['test1', 'test3']);
+
+        $this->actingAsAdmin()
+            ->getJson('api/admin/admins/permissions/' . $admin['id'])
+            ->assertJsonPath('code', 0)
+            ->assertJsonPath('data.0.name', 'test1')
+            ->assertJsonPath('data.1.name', 'test3')
+            ->assertOk();
     }
 }

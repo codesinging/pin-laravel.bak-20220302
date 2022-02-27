@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 /**
@@ -94,5 +96,68 @@ class AdminController extends Controller
         return $admin->delete()
             ? $this->success('删除成功')
             : $this->error('删除失败');
+    }
+
+    /**
+     * @title 新增权限
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function givePermissions(Admin $admin, Request $request): JsonResponse
+    {
+        $admin->givePermissionTo(Arr::wrap($request->get('permissions')));
+        return $this->success('新增权限成功');
+    }
+
+    /**
+     * @title 移除权限
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function revokePermissions(Admin $admin, Request $request): JsonResponse
+    {
+        $admin->revokePermissionTo(Arr::wrap($request->get('permissions')));
+        return $this->success('移除权限成功');
+    }
+
+    /**
+     * @title 设置权限
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function syncPermissions(Admin $admin, Request $request): JsonResponse
+    {
+        $admin->syncPermissions(Arr::wrap($request->get('permissions')));
+        return $this->success('设置权限成功');
+    }
+
+    /**
+     * 获取所有权限
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function permissions(Admin $admin, Request $request): JsonResponse
+    {
+        $from = $request->get('from', 'all');
+
+        $permissions = match ($from) {
+            'direct' => $admin->getDirectPermissions(),
+            'role' => $admin->getPermissionsViaRoles(),
+            default => $admin->getAllPermissions(),
+        };
+
+        return $this->success('获取权限成功', $permissions->toArray());
     }
 }
