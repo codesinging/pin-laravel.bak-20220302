@@ -10,8 +10,10 @@ class Admin extends AuthModel
 {
     use HasRoles;
 
+    protected string $guard_name = 'sanctum';
+
     /**
-     * 认证守卫名
+     * 认证守卫
      */
     const GUARD = 'sanctum';
 
