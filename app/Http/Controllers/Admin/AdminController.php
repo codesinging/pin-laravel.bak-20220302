@@ -6,6 +6,7 @@ use App\Exceptions\ErrorCode;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Models\Admin;
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -141,7 +142,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 获取所有权限
+     * @title 获取所有权限
      *
      * @param Admin $admin
      * @param Request $request
@@ -159,5 +160,62 @@ class AdminController extends Controller
         };
 
         return $this->success('获取权限成功', $permissions->toArray());
+    }
+
+    /**
+     * @title 指派角色
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function assignRoles(Admin $admin, Request $request): JsonResponse
+    {
+        $admin->assignRole(Arr::wrap($request->get('roles')));
+        return $this->success('指派角色成功');
+    }
+
+    /**
+     * @title 删除角色
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function removeRoles(Admin $admin, Request $request): JsonResponse
+    {
+        foreach (Arr::wrap($request->get('roles')) as $role) {
+            $admin->removeRole($role);
+        }
+        return $this->success('删除角色成功');
+    }
+
+    /**
+     * @title 设置角色
+     *
+     * @param Admin $admin
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function syncRoles(Admin $admin, Request $request): JsonResponse
+    {
+        $admin->syncRoles(Arr::wrap($request->get('roles')));
+        return $this->success('设置角色成功');
+    }
+
+    /**
+     * @title 获取所有角色
+     *
+     * @param Admin $admin
+     *
+     * @return JsonResponse
+     */
+    public function roles(Admin $admin): JsonResponse
+    {
+        $roles = $admin->getRoles()->toArray();
+        return $this->success('获取所有角色成功', $roles);
     }
 }

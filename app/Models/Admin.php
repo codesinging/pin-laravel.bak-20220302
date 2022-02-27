@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Model\AuthModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends AuthModel
@@ -48,5 +49,15 @@ class Admin extends AuthModel
     public function isSuper(): bool
     {
         return (boolean)$this->attributes['super'];
+    }
+
+    /**
+     * 获取角色
+     * @return Collection|array
+     */
+    public function getRoles(): Collection|array
+    {
+        $permissionRoleIds = $this->roles()->get()->pluck('id');
+        return Role::query()->whereIn('permission_role_id', $permissionRoleIds)->get();
     }
 }

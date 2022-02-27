@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
         foreach ($this->items() as $item) {
-            (new Role())->store($item, $item['guard_name']);
+            (new Role())->store($item);
         }
     }
 

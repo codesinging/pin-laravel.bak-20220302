@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
+use App\Models\Role;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -308,6 +309,136 @@ class AdminControllerTest extends TestCase
             ->assertJsonPath('code', 0)
             ->assertJsonPath('data.0.name', 'test1')
             ->assertJsonPath('data.1.name', 'test3')
+            ->assertOk();
+    }
+
+    public function testAssignRoles()
+    {
+        $roles = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($roles as $role) {
+            (new Role())->store($role);
+        }
+
+        $admin = $this->admin();
+
+        self::assertFalse($admin->hasAnyRole(['test1', 'test2', 'test3', 'test4']));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/assign_roles/' . $admin['id'], ['roles' => 'test1'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/assign_roles/' . $admin['id'], ['roles' => ['test2', 'test3']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllRoles(['test1', 'test2', 'test3']));
+    }
+
+    public function testRemoveRoles()
+    {
+        $roles = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($roles as $role) {
+            (new Role())->store($role);
+        }
+
+        $admin = $this->admin();
+
+        self::assertFalse($admin->hasAnyRole(['test1', 'test2', 'test3', 'test4']));
+
+        $admin->assignRole(['test1', 'test3', 'test4']);
+
+        self::assertTrue($admin->hasAllRoles(['test1', 'test3', 'test4']));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/remove_roles/' . $admin['id'], ['roles' => 'test1'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/remove_roles/' . $admin['id'], ['roles' => ['test3', 'test4']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertFalse($admin->hasAnyRole(['test1', 'test2', 'test3', 'test4']));
+    }
+
+    public function testSyncRoles()
+    {
+        $roles = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($roles as $role) {
+            (new Role())->store($role);
+        }
+
+        $admin = $this->admin();
+
+        self::assertFalse($admin->hasAnyRole(['test1', 'test2', 'test3', 'test4']));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/sync_roles/' . $admin['id'], ['roles' => 'test1'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasRole('test1'));
+        self::assertFalse($admin->hasAnyRole(['test2', 'test3', 'test4']));
+
+        $this->actingAsAdmin()
+            ->postJson('api/admin/admins/sync_roles/' . $admin['id'], ['roles' => ['test3', 'test4']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllRoles(['test3', 'test4']));
+        self::assertFalse($admin->hasAnyRole(['test1', 'test2']));
+    }
+
+    public function testRoles()
+    {
+        $roles = [
+            ['name' => 'test1', 'guard_name' => 'sanctum'],
+            ['name' => 'test2', 'guard_name' => 'sanctum'],
+            ['name' => 'test3', 'guard_name' => 'sanctum'],
+            ['name' => 'test4', 'guard_name' => 'sanctum'],
+        ];
+
+        foreach ($roles as $role) {
+            (new Role())->store($role);
+        }
+
+        $admin = $this->admin();
+        $admin->assignRole(['test3', 'test4']);
+
+        $this->actingAsAdmin()
+            ->getJson('api/admin/admins/roles/' . $admin['id'])
+            ->assertJsonPath('data.0.role.name', 'test3')
+            ->assertJsonPath('data.1.role.name', 'test4')
+            ->assertJsonPath('code', 0)
             ->assertOk();
     }
 }
