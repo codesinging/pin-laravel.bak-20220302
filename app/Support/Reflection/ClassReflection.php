@@ -51,9 +51,12 @@ class ClassReflection
      */
     public function methodTitle(string $name): ?string
     {
-        $method = $this->class->getMethod($name);
-        $comment = $method->getDocComment();
-        return $this->parseTitle($comment);
+        if ($this->class->hasMethod($name)){
+            $method = $this->class->getMethod($name);
+            $comment = $method->getDocComment();
+            return $this->parseTitle($comment);
+        }
+        return null;
     }
 
     /**
