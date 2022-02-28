@@ -16,9 +16,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BaseModel extends Model
 {
-    use HasFactory;
-    use ListHelpers;
-    use SerializeDate;
-    use SanitizeHelpers;
-    use InstanceHelpers;
+    use ModelTraits;
 }

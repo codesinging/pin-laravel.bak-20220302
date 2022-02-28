@@ -18,11 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class AuthModel extends User
 {
-    use HasFactory;
     use HasApiTokens;
     use Notifiable;
-    use ListHelpers;
-    use SerializeDate;
-    use SanitizeHelpers;
-    use InstanceHelpers;
+    use ModelTraits;
 }
