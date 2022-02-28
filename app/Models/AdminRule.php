@@ -8,7 +8,6 @@ class AdminRule extends BaseModel
 {
     protected $fillable = [
         'name',
-        'type',
         'guard',
         'module',
         'controller',

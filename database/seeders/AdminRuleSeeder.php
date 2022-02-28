@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\AdminRule;
+use App\Support\Permission\PermissionName;
 use App\Support\Reflection\ClassReflection;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Seeder;
@@ -47,12 +48,10 @@ class AdminRuleSeeder extends Seeder
         $actionTitle = $reflection->methodTitle($parser->action());
 
         if (!is_null($controllerTitle) && !is_null($actionTitle)){
-            $type = 'route';
 
-            $name = $parser->permissionRule($type);
+            $name = PermissionName::fromRouteParser($parser);
 
             $data = [
-                'type' => $type,
                 'module' => $parser->module(),
                 'controller' => $parser->controller(),
                 'action' => $parser->action(),

@@ -42,10 +42,4 @@ class RouteParserTest extends TestCase
         self::assertEquals('Auth', $parser->controller());
         self::assertEquals('login', $parser->action());
     }
-
-    public function testRule()
-    {
-        $parser = new RouteParser($this->routeAction);
-        self::assertEquals('route:Admin/Auth@login', $parser->permissionRule());
-    }
 }

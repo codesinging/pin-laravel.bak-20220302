@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Models\Admin;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
+use App\Support\Permission\PermissionName;
 use App\Support\Routing\RouteParser;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -131,7 +132,7 @@ class AdminControllerTest extends TestCase
         self::assertEquals('admin_super', $superAdmin['username']);
         self::assertEquals('Admin_Super', $superAdmin['name']);
 
-        $permission = (new RouteParser(AdminController::class.'@update'))->permissionRule();
+        $permission = PermissionName::fromRoute(AdminController::class.'@update');
         $commonAdmin->givePermissionTo($permission);
 
         // 一般管理员无法修改超级管理员的信息

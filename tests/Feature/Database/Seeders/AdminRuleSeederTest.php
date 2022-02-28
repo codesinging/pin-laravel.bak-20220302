@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Database\Seeders;
 
+use App\Http\Controllers\Admin\AuthController;
 use App\Models\AdminRule;
+use App\Support\Permission\PermissionName;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AdminRuleSeederTest extends TestCase
@@ -13,12 +14,11 @@ class AdminRuleSeederTest extends TestCase
 
     public function testSeeder()
     {
-        $name = 'route:Admin/Auth@login';
+        $name = PermissionName::fromRoute(AuthController::class . '@login');
         $rule = AdminRule::new()->where('name', $name)->first();
 
         $this->assertNotNull($rule);
         self::assertEquals($name, $rule['name']);
-        self::assertEquals('route', $rule['type']);
         self::assertEquals('Admin', $rule['module']);
         self::assertEquals('Auth', $rule['controller']);
         self::assertEquals('login', $rule['action']);
