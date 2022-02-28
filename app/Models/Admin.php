@@ -40,17 +40,8 @@ class Admin extends AuthModel
     }
 
     /**
-     * 是否超级管理员
-     *
-     * @return bool
-     */
-    public function isSuper(): bool
-    {
-        return (boolean)$this->attributes['super'];
-    }
-
-    /**
      * 获取角色
+     *
      * @return Collection|array
      */
     public function getRoles(): Collection|array

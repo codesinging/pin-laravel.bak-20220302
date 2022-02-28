@@ -21,4 +21,5 @@ class AuthModel extends User
     use HasApiTokens;
     use Notifiable;
     use ModelTraits;
+    use IsSuper;
 }

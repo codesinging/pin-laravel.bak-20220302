@@ -3,14 +3,18 @@
 namespace Tests\Feature\Models;
 
 use App\Models\Admin;
+use App\Models\AdminPermission;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
 {
     use RefreshDatabase;
+    use ActingAsAdmin;
 
     public function testPasswordAttribute()
     {
@@ -56,5 +60,25 @@ class AdminTest extends TestCase
 
         self::assertArrayHasKey('password', $admins[0]);
         self::assertArrayNotHasKey('password', $admins->toArray()[0]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testSuperAdmin()
+    {
+        $commonAdmin = $this->commonAdmin();
+        $superAdmin = $this->superAdmin();
+
+        $permissions = ['permission1', 'permission2', 'permission3'];
+
+        foreach ($permissions as $permission) {
+            AdminPermission::create(['name' => $permission]);
+        }
+
+        foreach ($permissions as $permission) {
+            self::assertFalse($commonAdmin->can($permission));
+            self::assertTrue($superAdmin->can($permission));
+        }
     }
 }
