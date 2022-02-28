@@ -7,7 +7,10 @@
 namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
+use App\Http\Controllers\Admin\AuthController;
 use App\Models\Admin;
+use App\Models\AdminMenu;
+use App\Support\Permission\PermissionName;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
@@ -59,6 +62,36 @@ class AuthControllerTest extends TestCase
         $this->actingAsAdmin()
             ->getJson('api/admin/auth/user')
             ->assertJsonPath('data.id', $admin['id'])
+            ->assertOk();
+    }
+
+    public function testMenus()
+    {
+        $this->actingAsAdmin()
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonStructure(['data' => [['id', 'name']]])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $commonAdmin = $this->commonAdmin();
+
+        $commonAdmin->givePermissionTo(PermissionName::fromRoute(AuthController::class.'@menus'));
+
+        $this->actingAsCommonAdmin()
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(0, 'data')
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $menu = AdminMenu::query()->first();
+
+        $commonAdmin->givePermissionTo(PermissionName::fromMenu($menu));
+
+        $this->actingAsCommonAdmin()
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $menu['id'])
+            ->assertJsonPath('code', 0)
             ->assertOk();
     }
 }

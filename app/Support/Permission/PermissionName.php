@@ -51,7 +51,7 @@ class PermissionName
      */
     public static function fromMenu(Model $model): string
     {
-        return sprintf('%s:%s/%s', self::PREFIX_MENU, $model->getTable(), $model['id']);
+        return sprintf('%s:%s@%s', self::PREFIX_MENU, $model->getTable(), $model['id']);
     }
 
     /**
@@ -78,5 +78,17 @@ class PermissionName
     public static function isMenu(string $permissionName): bool
     {
         return Str::startsWith($permissionName, self::PREFIX_MENU);
+    }
+
+    /**
+     * 从菜单权限名称中获取菜单 ID
+     * @param string $permissionName
+     *
+     * @return string
+     */
+    #[Pure]
+    public static function menuId(string $permissionName): string
+    {
+        return Str::afterLast($permissionName, '@');
     }
 }

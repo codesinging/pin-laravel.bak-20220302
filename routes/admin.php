@@ -14,6 +14,7 @@ Route::post('auth/login', [Admin\AuthController::class, 'login']);
 Route::middleware(['auth:sanctum', 'admin.authorize'])->group(function () {
 
     Route::get('auth/user', [Admin\AuthController::class, 'user']);
+    Route::get('auth/menus', [Admin\AuthController::class, 'menus']);
 
     Route::get('admins/permissions/{admin}', [Admin\AdminController::class, 'permissions']);
     Route::post('admins/give_permissions/{admin}', [Admin\AdminController::class, 'givePermissions']);

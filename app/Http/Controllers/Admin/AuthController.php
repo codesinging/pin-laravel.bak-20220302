@@ -8,6 +8,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
+use App\Models\AdminMenu;
+use App\Support\Permission\PermissionName;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,5 +69,34 @@ class AuthController extends Controller
         return Auth::check()
             ? $this->success('获取认证用户成功', $request->user())
             : $this->error('获取认证用户失败');
+    }
+
+    /**
+     * @title 获取菜单
+     *
+     * @param AdminMenu $menu
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function menus(AdminMenu $menu, Request $request): JsonResponse
+    {
+        $menu = $menu->where('status', true)->orderByDesc('sort');
+
+        /** @var Admin $admin */
+        $admin = $request->user();
+
+        if (!$admin->isSuper()) {
+            $menuIds = $admin->getAllPermissions()
+                ->filter(fn($permission) => PermissionName::isMenu($permission['name']))
+                ->map(fn($permission) => PermissionName::menuId($permission['name']))
+                ->toArray();
+
+            $menu = $menu->whereIn('id', $menuIds);
+        }
+
+        $menus = $menu->get()->toArray();
+
+        return $this->success('获取菜单成功', $menus);
     }
 }
