@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
 
 Route::get('test', [Admin\TestController::class, 'index']);
-
+Route::get('readme', [Admin\ReadmeController::class, 'index']);
 Route::post('auth/login', [Admin\AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum', 'admin.authorize'])->group(function () {
