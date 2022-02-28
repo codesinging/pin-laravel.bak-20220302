@@ -6,7 +6,6 @@ use App\Exceptions\ErrorCode;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Models\Admin;
-use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -100,7 +99,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @title 新增权限
+     * @title 分配权限
      *
      * @param Admin $admin
      * @param Request $request

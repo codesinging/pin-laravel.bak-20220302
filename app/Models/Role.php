@@ -24,13 +24,19 @@ class Role extends BaseModel
     ];
 
     /**
-     * Permission role
-     *
      * @return BelongsTo
      */
     public function role(): BelongsTo
     {
         return $this->belongsTo(PermissionRole::class, 'permission_role_id');
+    }
+
+    /**
+     * @return \Spatie\Permission\Contracts\Role
+     */
+    public function permissionRole(): \Spatie\Permission\Contracts\Role
+    {
+        return PermissionRole::findById($this->attributes['permission_role_id']);
     }
 
     /**
@@ -74,4 +80,5 @@ class Role extends BaseModel
 
         return $role;
     }
+
 }

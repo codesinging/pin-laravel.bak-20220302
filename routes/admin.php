@@ -25,9 +25,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admins/sync_roles/{admin}', [Admin\AdminController::class, 'syncRoles']);
     Route::apiResource('admins', Admin\AdminController::class);
 
-    Route::apiResource('menus', Admin\MenuController::class);
-
+    Route::get('roles/permissions/{role}', [Admin\RoleController::class, 'permissions']);
+    Route::post('roles/give_permissions/{role}', [Admin\RoleController::class, 'givePermissions']);
+    Route::post('roles/revoke_permissions/{role}', [Admin\RoleController::class, 'revokePermissions']);
+    Route::post('roles/sync_permissions/{role}', [Admin\RoleController::class, 'syncPermissions']);
     Route::apiResource('roles', Admin\RoleController::class);
+
+    Route::apiResource('menus', Admin\MenuController::class);
 
     Route::get('rules', [Admin\RuleController::class, 'index']);
 
