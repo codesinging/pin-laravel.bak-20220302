@@ -11,7 +11,7 @@ Route::get('test', [Admin\TestController::class, 'index']);
 
 Route::post('auth/login', [Admin\AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'admin.authorize'])->group(function () {
 
     Route::get('auth/user', [Admin\AuthController::class, 'user']);
 

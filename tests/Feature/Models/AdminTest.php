@@ -40,13 +40,8 @@ class AdminTest extends TestCase
 
     public function testIsSuper()
     {
-        /** @var Admin $superAdmin */
-        $superAdmin = Admin::where('super', true)->first();
-
-        /** @var Admin $commonAdmin */
-        $commonAdmin = Admin::where('super', false)->first();
-
-        self::assertFalse($commonAdmin->isSuper());
+        self::assertFalse($this->commonAdmin()->isSuper());
+        self::assertTrue($this->admin()->isSuper());
     }
 
     public function testPasswordHidden()
@@ -68,7 +63,7 @@ class AdminTest extends TestCase
     public function testSuperAdmin()
     {
         $commonAdmin = $this->commonAdmin();
-        $superAdmin = $this->superAdmin();
+        $superAdmin = $this->admin();
 
         $permissions = ['permission1', 'permission2', 'permission3'];
 

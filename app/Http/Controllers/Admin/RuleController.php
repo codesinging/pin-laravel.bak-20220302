@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class RuleController extends Controller
 {
+    /**
+     * @title 获取授权规则
+     *
+     * @param AdminRule $authRule
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function index(AdminRule $authRule, Request $request): JsonResponse
     {
         $lister = $authRule->lister(function (Builder $builder) use ($request) {

@@ -3,9 +3,11 @@
 namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\Admin;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
+use App\Support\Routing\RouteParser;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -71,8 +73,8 @@ class AdminControllerTest extends TestCase
     public function testUpdateValidation()
     {
         $commonAdmin = $this->commonAdmin();
-        $superAdmin = $this->superAdmin();
-        $this->actingAsSuperAdmin()
+        $superAdmin = $this->admin();
+        $this->actingAsAdmin()
             ->putJson('api/admin/admins/' . $commonAdmin['id'], [
                 'username' => $superAdmin['username'],
                 'name' => $superAdmin['name'],
@@ -84,7 +86,7 @@ class AdminControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $superAdmin = $this->superAdmin();
+        $superAdmin = $this->admin();
         $commonAdmin = $this->commonAdmin();
 
         // 测试修改登录账号和名称，并未修改密码
@@ -129,6 +131,9 @@ class AdminControllerTest extends TestCase
         self::assertEquals('admin_super', $superAdmin['username']);
         self::assertEquals('Admin_Super', $superAdmin['name']);
 
+        $permission = (new RouteParser(AdminController::class.'@update'))->rule();
+        $commonAdmin->givePermissionTo($permission);
+
         // 一般管理员无法修改超级管理员的信息
         $this->actingAs($commonAdmin)
             ->putJson('api/admin/admins/' . $superAdmin['id'], [
@@ -146,7 +151,7 @@ class AdminControllerTest extends TestCase
 
     public function testShow()
     {
-        $admin = $this->commonAdmin();
+        $admin = $this->admin();
 
         $this->actingAs($admin)
             ->getJson('api/admin/admins/' . $admin['id'])
@@ -157,25 +162,25 @@ class AdminControllerTest extends TestCase
 
     public function testDestroy()
     {
-        // 删除一般管理员
-        $admin = $this->commonAdmin();
+        $commonAdmin = $this->commonAdmin();
+        $superAdmin = $this->admin();
 
-        $this->actingAs($admin)
-            ->deleteJson('api/admin/admins/' . $admin['id'])
+        // 删除一般管理员
+        $this->actingAs($superAdmin)
+            ->deleteJson('api/admin/admins/' . $commonAdmin['id'])
             ->assertJsonPath('code', 0)
             ->assertOk();
 
-        self::assertModelMissing($admin);
+        self::assertModelMissing($commonAdmin);
 
         // 超级管理员无法删除
-        $admin = $this->superAdmin();
 
-        $this->actingAs($admin)
-            ->deleteJson('api/admin/admins/' . $admin['id'])
+        $this->actingAs($superAdmin)
+            ->deleteJson('api/admin/admins/' . $superAdmin['id'])
             ->assertJsonPath('code', ErrorCode::SUPER_ADMIN_DELETE_ERROR)
             ->assertOk();
 
-        self::assertModelExists($admin);
+        self::assertModelExists($superAdmin);
     }
 
     /**

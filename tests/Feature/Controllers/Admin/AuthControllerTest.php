@@ -9,11 +9,13 @@ namespace Tests\Feature\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use ActingAsAdmin;
 
     public function testLogin()
     {
@@ -53,10 +55,8 @@ class AuthControllerTest extends TestCase
 
     public function testUser()
     {
-        /** @var Admin $admin */
-        $admin = Admin::first();
-
-        $this->actingAs($admin)
+        $admin = $this->admin();
+        $this->actingAsAdmin()
             ->getJson('api/admin/auth/user')
             ->assertJsonPath('data.id', $admin['id'])
             ->assertOk();
