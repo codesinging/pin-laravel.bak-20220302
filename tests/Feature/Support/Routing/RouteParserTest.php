@@ -47,4 +47,13 @@ class RouteParserTest extends TestCase
         self::assertEquals('管理员认证', $parser->controllerTitle());
         self::assertEquals('管理员登录', $parser->actionTitle());
     }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function testRule()
+    {
+        $parser = new RouteParser($this->routeAction);
+        self::assertEquals('route:Admin/Auth@login', $parser->rule());
+    }
 }

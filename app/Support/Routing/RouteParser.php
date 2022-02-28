@@ -8,8 +8,10 @@ namespace App\Support\Routing;
 
 use App\Support\Reflection\ClassReflection;
 use Illuminate\Routing\Route as RouteClass;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 use ReflectionException;
 
 class RouteParser
@@ -23,13 +25,13 @@ class RouteParser
     protected ?string $actionTitle;
 
     /**
-     * @param RouteClass|string $route
+     * @param RouteClass|string|null $route
      *
      * @throws ReflectionException
      */
-    public function __construct(RouteClass|string $route)
+    public function __construct(RouteClass|string $route = null)
     {
-        $this->route = is_string($route) ? self::route($route) : $route;
+        $this->route = empty($route) ? Request::route() : (is_string($route) ? self::route($route) : $route);
         $this->parse();
     }
 
@@ -123,5 +125,11 @@ class RouteParser
     public function actionTitle(): ?string
     {
         return $this->actionTitle;
+    }
+
+    #[Pure]
+    public function rule(string $prefix = 'route', string $separator = ':'): string
+    {
+        return sprintf('%s:%s/%s@%s', $prefix, $this->module(), $this->controller(), $this->action());
     }
 }

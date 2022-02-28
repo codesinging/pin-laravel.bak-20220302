@@ -9,6 +9,6 @@ class TestController extends Controller
 {
     public function index()
     {
-        return __METHOD__;
+        dump(\request()->route());
     }
 }

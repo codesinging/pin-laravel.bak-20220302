@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin;
 use App\Models\AdminRule;
 use App\Support\Routing\RouteParser;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Route;
 use ReflectionException;
@@ -45,7 +43,7 @@ class AdminRuleSeeder extends Seeder
         if (!is_null($parser->controllerTitle()) && !is_null($parser->actionTitle())){
             $type = 'route';
 
-            $name = sprintf('%s:%s/%s@%s', $type, $parser->module(), $parser->controller(), $parser->action());
+            $name = $parser->rule($type);
 
             $data = [
                 'type' => $type,
