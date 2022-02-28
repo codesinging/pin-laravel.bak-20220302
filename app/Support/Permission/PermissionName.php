@@ -9,10 +9,14 @@ namespace App\Support\Permission;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
 class PermissionName
 {
+    const PREFIX_ROUTE = 'route';
+    const PREFIX_MENU = 'menu';
+
     /**
      * 从路由构建
      *
@@ -35,7 +39,7 @@ class PermissionName
     #[Pure]
     public static function fromRouteParser(RouteParser $parser): string
     {
-        return sprintf('%s:%s/%s@%s', 'route', $parser->module(), $parser->controller(), $parser->action());
+        return sprintf('%s:%s/%s@%s', self::PREFIX_ROUTE, $parser->module(), $parser->controller(), $parser->action());
     }
 
     /**
@@ -47,6 +51,32 @@ class PermissionName
      */
     public static function fromMenu(Model $model): string
     {
-        return sprintf('%s:%s', 'menu', $model['id']);
+        return sprintf('%s:%s/%s', self::PREFIX_MENU, $model->getTable(), $model['id']);
+    }
+
+    /**
+     * 是否路由
+     *
+     * @param string $permissionName
+     *
+     * @return bool
+     */
+    #[Pure]
+    public static function isRoute(string $permissionName): bool
+    {
+        return Str::startsWith($permissionName, self::PREFIX_ROUTE);
+    }
+
+    /**
+     * 是否菜单
+     *
+     * @param string $permissionName
+     *
+     * @return bool
+     */
+    #[Pure]
+    public static function isMenu(string $permissionName): bool
+    {
+        return Str::startsWith($permissionName, self::PREFIX_MENU);
     }
 }
