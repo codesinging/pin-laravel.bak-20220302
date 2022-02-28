@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\AdminRule;
+use App\Support\Reflection\ClassReflection;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Route;
@@ -40,7 +41,12 @@ class AdminRuleSeeder extends Seeder
     {
         $parser = new RouteParser($route);
 
-        if (!is_null($parser->controllerTitle()) && !is_null($parser->actionTitle())){
+        $reflection = new ClassReflection($parser->class());
+
+        $controllerTitle = $reflection->classTitle();
+        $actionTitle = $reflection->methodTitle($parser->action());
+
+        if (!is_null($controllerTitle) && !is_null($actionTitle)){
             $type = 'route';
 
             $name = $parser->rule($type);
@@ -50,8 +56,8 @@ class AdminRuleSeeder extends Seeder
                 'module' => $parser->module(),
                 'controller' => $parser->controller(),
                 'action' => $parser->action(),
-                'controller_title' => $parser->controllerTitle(),
-                'action_title' => $parser->actionTitle(),
+                'controller_title' => $controllerTitle,
+                'action_title' => $actionTitle,
             ];
 
             $this->syncDatabase($name, $data);
