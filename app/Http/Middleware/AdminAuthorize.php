@@ -31,7 +31,7 @@ class AdminAuthorize
 
         $parser = new RouteParser($request->route());
 
-        $permission = $parser->rule();
+        $permission = $parser->permissionRule();
 
         if (!is_null(AdminPermission::query()->where('name', $permission)->first()) && !$admin->can($permission)) {
             throw new ApiException('无访问权限', ErrorCode::PERMISSION_NO_AUTHORIZATION);

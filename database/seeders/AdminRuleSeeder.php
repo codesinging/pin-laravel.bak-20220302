@@ -49,7 +49,7 @@ class AdminRuleSeeder extends Seeder
         if (!is_null($controllerTitle) && !is_null($actionTitle)){
             $type = 'route';
 
-            $name = $parser->rule($type);
+            $name = $parser->permissionRule($type);
 
             $data = [
                 'type' => $type,

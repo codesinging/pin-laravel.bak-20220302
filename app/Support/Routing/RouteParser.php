@@ -110,7 +110,7 @@ class RouteParser
     }
 
     #[Pure]
-    public function rule(string $prefix = 'route', string $separator = ':'): string
+    public function permissionRule(string $prefix = 'route', string $separator = ':'): string
     {
         return sprintf('%s:%s/%s@%s', $prefix, $this->module(), $this->controller(), $this->action());
     }

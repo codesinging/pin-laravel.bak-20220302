@@ -131,7 +131,7 @@ class AdminControllerTest extends TestCase
         self::assertEquals('admin_super', $superAdmin['username']);
         self::assertEquals('Admin_Super', $superAdmin['name']);
 
-        $permission = (new RouteParser(AdminController::class.'@update'))->rule();
+        $permission = (new RouteParser(AdminController::class.'@update'))->permissionRule();
         $commonAdmin->givePermissionTo($permission);
 
         // 一般管理员无法修改超级管理员的信息
