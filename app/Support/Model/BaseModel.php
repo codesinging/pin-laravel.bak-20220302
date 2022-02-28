@@ -20,4 +20,5 @@ class BaseModel extends Model
     use ListHelpers;
     use SerializeDate;
     use SanitizeHelpers;
+    use InstanceHelpers;
 }
