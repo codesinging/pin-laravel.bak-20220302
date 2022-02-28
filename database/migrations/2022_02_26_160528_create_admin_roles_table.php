@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rules', function (Blueprint $table) {
+        Schema::create('admin_roles', function (Blueprint $table) {
             $table->id();
 
-            $table->string("name")->unique();
-            $table->string("type");
-            $table->string("guard");
-            $table->string("module");
-            $table->string("controller");
-            $table->string("action");
-            $table->string("controller_title");
-            $table->string("action_title");
+            $table->bigInteger('permission_role_id')->nullable()->unique();
+            $table->string('description')->nullable();
+            $table->integer('sort')->default(0);
+            $table->boolean('status')->default(true);
 
             $table->timestamps();
         });
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rules');
+        Schema::dropIfExists('admin_roles');
     }
 };

@@ -29,7 +29,7 @@ class AdminSeeder extends Seeder
     public function run()
     {
         foreach ($this->admins as $admin) {
-            Admin::create($admin);
+            Admin::new()->create($admin);
         }
     }
 }

@@ -4,13 +4,11 @@ namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
-use App\Models\Role;
+use App\Models\AdminPermission;
+use App\Models\AdminRole;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Exceptions\PermissionDoesNotExist;
-use Spatie\Permission\Models\Permission;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
 
@@ -186,14 +184,14 @@ class AdminControllerTest extends TestCase
     public function testGivePermissions()
     {
         $testPermissions = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($testPermissions as $testPermission) {
-            Permission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $commonAdmin = $this->commonAdmin();
@@ -221,14 +219,14 @@ class AdminControllerTest extends TestCase
     public function testRevokePermissions()
     {
         $testPermissions = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($testPermissions as $testPermission) {
-            Permission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -259,14 +257,14 @@ class AdminControllerTest extends TestCase
     public function testSyncPermissions()
     {
         $testPermissions = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($testPermissions as $testPermission) {
-            Permission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -290,14 +288,14 @@ class AdminControllerTest extends TestCase
     public function testPermissions()
     {
         $testPermissions = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($testPermissions as $testPermission) {
-            Permission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -315,14 +313,14 @@ class AdminControllerTest extends TestCase
     public function testAssignRoles()
     {
         $roles = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($roles as $role) {
-            (new Role())->store($role);
+            (new AdminRole())->store($role);
         }
 
         $admin = $this->admin();
@@ -347,14 +345,14 @@ class AdminControllerTest extends TestCase
     public function testRemoveRoles()
     {
         $roles = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($roles as $role) {
-            (new Role())->store($role);
+            (new AdminRole())->store($role);
         }
 
         $admin = $this->admin();
@@ -383,14 +381,14 @@ class AdminControllerTest extends TestCase
     public function testSyncRoles()
     {
         $roles = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($roles as $role) {
-            (new Role())->store($role);
+            (new AdminRole())->store($role);
         }
 
         $admin = $this->admin();
@@ -421,14 +419,14 @@ class AdminControllerTest extends TestCase
     public function testRoles()
     {
         $roles = [
-            ['name' => 'test1', 'guard_name' => 'sanctum'],
-            ['name' => 'test2', 'guard_name' => 'sanctum'],
-            ['name' => 'test3', 'guard_name' => 'sanctum'],
-            ['name' => 'test4', 'guard_name' => 'sanctum'],
+            ['name' => 'test1'],
+            ['name' => 'test2'],
+            ['name' => 'test3'],
+            ['name' => 'test4'],
         ];
 
         foreach ($roles as $role) {
-            (new Role())->store($role);
+            (new AdminRole())->store($role);
         }
 
         $admin = $this->admin();

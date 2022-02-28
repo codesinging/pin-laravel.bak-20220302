@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use App\Models\Rule;
+use App\Models\AdminRule;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Route;
 use ReflectionException;
 
-class RuleSeeder extends Seeder
+class AdminRuleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,25 +20,25 @@ class RuleSeeder extends Seeder
      */
     public function run()
     {
-        $this->parseRules('api/admin', Admin::GUARD);
+        $this->parseRules('api/admin');
     }
 
     /**
      * @throws ReflectionException
      */
-    protected function parseRules(string $prefix, string $guard)
+    protected function parseRules(string $prefix)
     {
         $routes = RouteParser::routes($prefix);
 
         foreach ($routes as $route) {
-            $this->parseRoute($route, $guard);
+            $this->parseRoute($route);
         }
     }
 
     /**
      * @throws ReflectionException
      */
-    protected function parseRoute(Route $route, string $guard)
+    protected function parseRoute(Route $route)
     {
         $parser = new RouteParser($route);
 
@@ -49,7 +49,6 @@ class RuleSeeder extends Seeder
 
             $data = [
                 'type' => $type,
-                'guard' => $guard,
                 'module' => $parser->module(),
                 'controller' => $parser->controller(),
                 'action' => $parser->action(),
@@ -63,6 +62,6 @@ class RuleSeeder extends Seeder
 
     protected function syncDatabase(string $name, array $data)
     {
-        (new Rule())->updateOrCreate(['name' => $name], $data);
+        (new AdminRule())->updateOrCreate(['name' => $name], $data);
     }
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Support\Model\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Permission\Models\Role as PermissionRole;
+use Spatie\Permission\Contracts\Role;
 
-class Role extends BaseModel
+class AdminRole extends BaseModel
 {
     protected $fillable = [
         'permission_role_id',
@@ -28,30 +28,28 @@ class Role extends BaseModel
      */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(PermissionRole::class, 'permission_role_id');
+        return $this->belongsTo(AdminPermissionRole::class, 'permission_role_id');
     }
 
     /**
-     * @return \Spatie\Permission\Contracts\Role
+     * @return Role
      */
-    public function permissionRole(): \Spatie\Permission\Contracts\Role
+    public function permissionRole(): Role
     {
-        return PermissionRole::findById($this->attributes['permission_role_id']);
+        return AdminPermissionRole::findById($this->attributes['permission_role_id']);
     }
 
     /**
      * 新增角色
      *
      * @param array $data
-     * @param string $guard
      *
-     * @return Role
+     * @return AdminRole
      */
-    public function store(array $data, string $guard = ''): Role
+    public function store(array $data): AdminRole
     {
-        $permissionRole = PermissionRole::create([
+        $permissionRole = AdminPermissionRole::create([
             'name' => $data['name'],
-            'guard_name' => $guard ?: ($data['guard_name'] ?? ''),
         ]);
 
         $role = $this->create($this->sanitize($data));
@@ -63,18 +61,16 @@ class Role extends BaseModel
     /**
      * 同步角色
      *
-     * @param Role $role
+     * @param AdminRole $role
      * @param array $data
-     * @param string $guard
      *
-     * @return Role
+     * @return AdminRole
      */
-    public function sync(Role $role, array $data, string $guard = ''): Role
+    public function sync(AdminRole $role, array $data): AdminRole
     {
         $role->fill($this->sanitize($data))->save();
         $role->role()->update([
             'name' => $data['name'],
-            'guard_name' => $guard ?: ($data['guard_name'] ?? ''),
         ]);
         $role->refresh();
 

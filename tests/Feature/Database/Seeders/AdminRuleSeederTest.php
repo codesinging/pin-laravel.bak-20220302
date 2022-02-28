@@ -2,19 +2,19 @@
 
 namespace Tests\Feature\Database\Seeders;
 
-use App\Models\Rule;
+use App\Models\AdminRule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RuleSeederTest extends TestCase
+class AdminRuleSeederTest extends TestCase
 {
     use RefreshDatabase;
 
     public function testSeeder()
     {
         $name = 'route:Admin/Auth@login';
-        $rule = Rule::where('name', $name)->first();
+        $rule = AdminRule::new()->where('name', $name)->first();
 
         $this->assertNotNull($rule);
         self::assertEquals($name, $rule['name']);

@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Support\Model\BaseModel;
 use Kalnoy\Nestedset\NodeTrait;
 
-class Menu extends BaseModel
+class AdminMenu extends BaseModel
 {
     use NodeTrait;
 

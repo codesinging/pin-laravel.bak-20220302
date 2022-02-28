@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Menu;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AdminMenu;
 use Illuminate\Database\Seeder;
 
-class MenuSeeder extends Seeder
+class AdminMenuSeeder extends Seeder
 {
     private array $menus = [
         ['name' => '首页', 'path' => 'home', 'icon' => 'bi-house', 'is_home' => true],
@@ -28,7 +27,7 @@ class MenuSeeder extends Seeder
     public function run()
     {
         foreach ($this->menus as $menu) {
-            Menu::create($menu);
+            AdminMenu::create($menu);
         }
     }
 }

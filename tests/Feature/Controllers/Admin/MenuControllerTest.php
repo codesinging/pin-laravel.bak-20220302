@@ -3,9 +3,8 @@
 namespace Tests\Feature\Controllers\Admin;
 
 use App\Exceptions\ErrorCode;
-use App\Models\Menu;
+use App\Models\AdminMenu;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
@@ -28,7 +27,7 @@ class MenuControllerTest extends TestCase
 
     public function testStore()
     {
-        Menu::truncate();
+        AdminMenu::truncate();
 
         $this->actingAsAdmin()
             ->postJson('api/admin/menus', [
@@ -39,7 +38,7 @@ class MenuControllerTest extends TestCase
             ->assertJsonPath('data.parent_id', null)
             ->assertOk();
 
-        $menu_1 = Menu::first();
+        $menu_1 = AdminMenu::first();
 
         $this->actingAsAdmin()
             ->postJson('api/admin/menus', [
@@ -51,7 +50,7 @@ class MenuControllerTest extends TestCase
             ->assertJsonPath('data.parent_id', $menu_1['id'])
             ->assertOk();
 
-        $tree = Menu::all()->toTree()->toArray();
+        $tree = AdminMenu::all()->toTree()->toArray();
         self::assertArrayHasKey('children', $tree[0]);
         self::assertEquals(2, Arr::get($tree, '0.children.0.id'));
         self::assertEquals(1, Arr::get($tree, '0.children.0.parent_id'));
@@ -67,7 +66,7 @@ class MenuControllerTest extends TestCase
             ->assertOk()
             ->assertJsonPath('code', ErrorCode::OK);
 
-        $nodeMenus = Menu::where('path', 'menus')->first();
+        $nodeMenus = AdminMenu::where('path', 'menus')->first();
 
         // 测试修改菜单信息，并移动到根节点
         $this->actingAsAdmin()
@@ -79,7 +78,7 @@ class MenuControllerTest extends TestCase
             ->assertJsonPath('code', 0)
             ->assertOk();
 
-        $nodeAuthorizations = Menu::where('path', 'authorizations')->first();
+        $nodeAuthorizations = AdminMenu::where('path', 'authorizations')->first();
 
         // 测试修改菜单并移动到根节点
 
@@ -103,16 +102,16 @@ class MenuControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $this->assertDatabaseHas('menus', ['path' => 'roles']);
+        $this->assertDatabaseHas('admin_menus', ['path' => 'roles']);
 
-        $node = Menu::where('path', 'authorizations')->first();
+        $node = AdminMenu::where('path', 'authorizations')->first();
 
         $this->actingAsAdmin()
             ->deleteJson('api/admin/menus/'.$node['id'])
             ->assertJsonPath('code', 0)
             ->assertOk();
 
-        $this->assertDatabaseMissing('menus', ['path' => 'authorizations']);
-        $this->assertDatabaseMissing('menus', ['path' => 'roles']);
+        $this->assertDatabaseMissing('admin_menus', ['path' => 'authorizations']);
+        $this->assertDatabaseMissing('admin_menus', ['path' => 'roles']);
     }
 }

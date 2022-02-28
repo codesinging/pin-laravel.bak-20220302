@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Support\Model\BaseModel;
 
-class Rule extends BaseModel
+class AdminRule extends BaseModel
 {
     protected $fillable = [
         'name',

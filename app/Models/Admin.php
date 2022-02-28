@@ -13,8 +13,6 @@ class Admin extends AuthModel
 
     protected string $guard_name = 'sanctum';
 
-    const GUARD = 'sanctum';
-
     protected $fillable = [
         'username',
         'name',
@@ -58,6 +56,6 @@ class Admin extends AuthModel
     public function getRoles(): Collection|array
     {
         $permissionRoleIds = $this->roles()->get()->pluck('id');
-        return Role::query()->whereIn('permission_role_id', $permissionRoleIds)->get();
+        return AdminRole::query()->whereIn('permission_role_id', $permissionRoleIds)->get();
     }
 }

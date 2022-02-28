@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\MenuRequest;
-use App\Models\Menu;
+use App\Models\AdminMenu;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -14,11 +14,11 @@ class MenuController extends Controller
     /**
      * @title 获取菜单列表
      *
-     * @param Menu $menu
+     * @param AdminMenu $menu
      *
      * @return JsonResponse
      */
-    public function index(Menu $menu): JsonResponse
+    public function index(AdminMenu $menu): JsonResponse
     {
         $menus = $menu->orderByDesc('sort')->get()->toTree()->toArray();
 
@@ -35,10 +35,10 @@ class MenuController extends Controller
     public function store(MenuRequest $request): JsonResponse
     {
         if ($parentId = $request['parent_id']) {
-            $parent = Menu::find($parentId);
-            $menu = Menu::create($request->all(), $parent);
+            $parent = AdminMenu::find($parentId);
+            $menu = AdminMenu::create($request->all(), $parent);
         } else {
-            $menu = Menu::create($request->all());
+            $menu = AdminMenu::create($request->all());
         }
 
         return $this->success('新增成功', $menu);
@@ -48,16 +48,16 @@ class MenuController extends Controller
      * @title 更新菜单
      *
      * @param MenuRequest $request
-     * @param Menu $menu
+     * @param AdminMenu $menu
      *
      * @return JsonResponse
      */
-    public function update(MenuRequest $request, Menu $menu): JsonResponse
+    public function update(MenuRequest $request, AdminMenu $menu): JsonResponse
     {
         $menu->fill($request->all())->save();
 
         if ($parentId = $request['parent_id']) {
-            $parent = Menu::find($parentId);
+            $parent = AdminMenu::find($parentId);
             $menu->appendToNode($parent)->save();
         } else {
             $menu->saveAsRoot();
@@ -69,11 +69,11 @@ class MenuController extends Controller
     /**
      * @title 获取菜单详情
      *
-     * @param Menu $menu
+     * @param AdminMenu $menu
      *
      * @return JsonResponse
      */
-    public function show(Menu $menu): JsonResponse
+    public function show(AdminMenu $menu): JsonResponse
     {
         return $this->success('获取详情成功', $menu);
     }
@@ -81,11 +81,11 @@ class MenuController extends Controller
     /**
      * @title 删除菜单
      *
-     * @param Menu $menu
+     * @param AdminMenu $menu
      *
      * @return JsonResponse
      */
-    public function destroy(Menu $menu): JsonResponse
+    public function destroy(AdminMenu $menu): JsonResponse
     {
         return $menu->delete()
             ? $this->success('删除成功')
