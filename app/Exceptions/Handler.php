@@ -57,6 +57,8 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             if ($e instanceof ValidationException) {
                 return ApiResponse::error($e->validator->errors()->first(), ErrorCode::VALIDATION_ERROR, $e->validator->getMessageBag());
+            } elseif ($e instanceof ApiException){
+                return ApiResponse::error($e->getMessage(), $e->getCode());
             }
         }
 
