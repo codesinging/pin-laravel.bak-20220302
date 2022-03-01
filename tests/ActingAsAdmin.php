@@ -7,7 +7,7 @@
 namespace Tests;
 
 use App\Models\Admin;
-use Laravel\Sanctum\Sanctum;
+use Database\Seeders\AdminSeeder;
 
 trait ActingAsAdmin
 {
@@ -33,4 +33,12 @@ trait ActingAsAdmin
         return $this;
     }
 
+    protected function seedAdmin(): static
+    {
+        if ($this->seed === false){
+            $this->seed(AdminSeeder::class);
+        }
+
+        return $this;
+    }
 }
