@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum', 'admin.authorize'])->group(function () {
     Route::apiResource('menus', Admin\MenuController::class);
 
     Route::get('permissions/update/{type?}', [Admin\PermissionController::class, 'update']);
+    Route::get('permissions/actions', [Admin\PermissionController::class, 'actions']);
 
     Route::get('rules', [Admin\RuleController::class, 'index']);
 

@@ -6,10 +6,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\AdminAction;
 use App\Support\Permission\PermissionUpdater;
 use Illuminate\Http\JsonResponse;
 use ReflectionException;
 
+/**
+ * @title 权限管理
+ */
 class PermissionController extends Controller
 {
     /**
@@ -31,5 +35,16 @@ class PermissionController extends Controller
         }
 
         return $this->success('更新成功');
+    }
+
+    /**
+     * @title 获取操作权限列表
+     * @return JsonResponse
+     */
+    public function actions(): JsonResponse
+    {
+        $actions = AdminAction::all()->toArray();
+
+        return $this->success('获取操作权限列表成功', $actions);
     }
 }

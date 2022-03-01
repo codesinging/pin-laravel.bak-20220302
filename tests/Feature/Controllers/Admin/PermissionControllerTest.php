@@ -6,6 +6,7 @@ use App\Models\AdminAction;
 use App\Models\AdminMenu;
 use App\Models\AdminPermission;
 use Database\Seeders\AdminMenuSeeder;
+use Database\Seeders\AdminPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
@@ -63,5 +64,17 @@ class PermissionControllerTest extends TestCase
 
         self::assertGreaterThan(0, AdminPermission::all()->count());
         self::assertEquals(AdminMenu::query()->where('status', true)->get()->count(), AdminPermission::all()->count());
+    }
+
+    public function testActions()
+    {
+        $this->seed(AdminPermissionSeeder::class);
+
+        $this->seedAdmin()
+            ->actingAsAdmin()
+            ->getJson('api/admin/permissions/actions')
+            ->assertJsonCount(AdminAction::query()->count(), 'data')
+            ->assertJsonPath('code', 0)
+            ->assertOk();
     }
 }
