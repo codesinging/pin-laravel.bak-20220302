@@ -5,8 +5,8 @@ namespace App\Http\Middleware;
 use App\Exceptions\ApiException;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
-use App\Models\AdminPermissionPermission;
-use App\Support\Permission\PermissionName;
+use App\Models\AdminPermission;
+use App\Support\Permission\PermissionBuilder;
 use App\Support\Routing\RouteParser;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -30,9 +30,9 @@ class AdminAuthorize
         /** @var Admin $admin */
         $admin = $request->user();
 
-        $permission = PermissionName::fromRoute($request->route());
+        $permission = PermissionBuilder::fromRoute($request->route());
 
-        if (!is_null(AdminPermissionPermission::query()->where('name', $permission)->first()) && !$admin->can($permission)) {
+        if (!is_null(AdminPermission::query()->where('name', $permission)->first()) && !$admin->can($permission)) {
             throw new ApiException('无访问权限', ErrorCode::PERMISSION_NO_AUTHORIZATION);
         }
 

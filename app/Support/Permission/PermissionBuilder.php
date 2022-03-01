@@ -6,13 +6,15 @@
 
 namespace App\Support\Permission;
 
+use App\Support\Reflection\ClassReflection;
 use App\Support\Routing\RouteParser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
+use ReflectionException;
 
-class PermissionName
+class PermissionBuilder
 {
     const PREFIX_ROUTE = 'route';
     const PREFIX_MENU = 'menu';
@@ -39,7 +41,7 @@ class PermissionName
     #[Pure]
     public static function fromRouteParser(RouteParser $parser): string
     {
-        return sprintf('%s:%s/%s@%s', self::PREFIX_ROUTE, $parser->module(), $parser->controller(), $parser->action());
+        return sprintf('%s:%s@%s', self::PREFIX_ROUTE, $parser->controller(), $parser->action());
     }
 
     /**
@@ -82,6 +84,7 @@ class PermissionName
 
     /**
      * 从菜单权限名称中获取菜单 ID
+     *
      * @param string $permissionName
      *
      * @return string
@@ -90,5 +93,27 @@ class PermissionName
     public static function menuId(string $permissionName): string
     {
         return Str::afterLast($permissionName, '@');
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public static function actionData(Route|string $route): ?array
+    {
+        $parser = new RouteParser($route);
+
+        $reflection = new ClassReflection($parser->class());
+
+        if (!is_null($controllerTitle = $reflection->classTitle()) && !is_null($actionTitle = $reflection->methodTitle($parser->action()))) {
+            return [
+                'name' => self::fromRouteParser($parser),
+                'controller' => $parser->controller(),
+                'action' => $parser->action(),
+                'controller_title' => $controllerTitle,
+                'action_title' => $actionTitle,
+            ];
+        }
+
+        return null;
     }
 }

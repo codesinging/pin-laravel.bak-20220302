@@ -3,7 +3,7 @@
 namespace Tests\Feature\Models;
 
 use App\Models\Admin;
-use App\Models\AdminPermissionPermission;
+use App\Models\AdminPermission;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -68,7 +68,7 @@ class AdminTest extends TestCase
         $permissions = ['permission1', 'permission2', 'permission3'];
 
         foreach ($permissions as $permission) {
-            AdminPermissionPermission::create(['name' => $permission]);
+            AdminPermission::create(['name' => $permission]);
         }
 
         foreach ($permissions as $permission) {

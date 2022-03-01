@@ -9,7 +9,7 @@ use Spatie\Permission\Contracts\Role;
 class AdminRole extends BaseModel
 {
     protected $fillable = [
-        'permission_role_id',
+        'role_id',
         'description',
         'sort',
         'status',
@@ -24,23 +24,25 @@ class AdminRole extends BaseModel
     ];
 
     /**
+     * 当前管理员角色的关联权限角色模型
      * @return BelongsTo
      */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(AdminPermissionRole::class, 'permission_role_id');
+        return $this->belongsTo(AdminPermissionRole::class, 'role_id');
     }
 
     /**
+     * 当前管理员角色对应的权限角色模型
      * @return Role
      */
-    public function permissionRole(): Role
+    public function relatedRole(): Role
     {
-        return AdminPermissionRole::findById($this->attributes['permission_role_id']);
+        return AdminPermissionRole::findById($this->attributes['role_id']);
     }
 
     /**
-     * 新增角色
+     * 新增管理员角色并同步新增权限角色
      *
      * @param array $data
      *
@@ -59,7 +61,7 @@ class AdminRole extends BaseModel
     }
 
     /**
-     * 同步角色
+     * 更新管理员角色并同步更新对应的权限角色
      *
      * @param AdminRole $role
      * @param array $data

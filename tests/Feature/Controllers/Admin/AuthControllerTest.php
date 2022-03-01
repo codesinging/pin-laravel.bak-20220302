@@ -10,7 +10,7 @@ use App\Exceptions\ErrorCode;
 use App\Http\Controllers\Admin\AuthController;
 use App\Models\Admin;
 use App\Models\AdminMenu;
-use App\Support\Permission\PermissionName;
+use App\Support\Permission\PermissionBuilder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ActingAsAdmin;
 use Tests\TestCase;
@@ -75,7 +75,7 @@ class AuthControllerTest extends TestCase
 
         $commonAdmin = $this->commonAdmin();
 
-        $commonAdmin->givePermissionTo(PermissionName::fromRoute(AuthController::class.'@menus'));
+        $commonAdmin->givePermissionTo(PermissionBuilder::fromRoute(AuthController::class.'@menus'));
 
         $this->actingAsCommonAdmin()
             ->getJson('api/admin/auth/menus')
@@ -85,7 +85,7 @@ class AuthControllerTest extends TestCase
 
         $menu = AdminMenu::query()->first();
 
-        $commonAdmin->givePermissionTo(PermissionName::fromMenu($menu));
+        $commonAdmin->givePermissionTo(PermissionBuilder::fromMenu($menu));
 
         $this->actingAsCommonAdmin()
             ->getJson('api/admin/auth/menus')

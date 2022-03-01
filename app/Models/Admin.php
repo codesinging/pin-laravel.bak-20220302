@@ -46,7 +46,7 @@ class Admin extends AuthModel
      */
     public function getRoles(): Collection|array
     {
-        $permissionRoleIds = $this->roles()->get()->pluck('id');
-        return AdminRole::query()->whereIn('permission_role_id', $permissionRoleIds)->get();
+        $roleIds = $this->roles()->get()->pluck('id');
+        return AdminRole::query()->whereIn('role_id', $roleIds)->get();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Support\Reflection;
+namespace Tests\Feature\Support\Reflection;
 
 use App\Support\Reflection\ClassReflection;
 use PHPUnit\Framework\TestCase;

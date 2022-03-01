@@ -17,7 +17,7 @@ class AdminRoleSeederTest extends TestCase
         $name = '系统管理员';
 
         $adminRole = AdminPermissionRole::query()->where('name', $name)->first();
-        $role = AdminRole::query()->where('permission_role_id', $adminRole['id'])->first();
+        $role = AdminRole::query()->where('role_id', $adminRole['id'])->first();
 
         self::assertNotNull($adminRole);
         self::assertNotNull($role);

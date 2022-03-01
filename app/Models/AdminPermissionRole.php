@@ -6,7 +6,9 @@
 
 namespace App\Models;
 
-class AdminPermissionRole extends \Spatie\Permission\Models\Role
+use Spatie\Permission\Models\Role;
+
+class AdminPermissionRole extends Role
 {
     protected string $guard_name = 'sanctum';
 }

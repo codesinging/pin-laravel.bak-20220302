@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('admin_roles', function (Blueprint $table) {
             $table->id();
 
-            $table->bigInteger('permission_role_id')->nullable()->unique();
+            $table->bigInteger('role_id')->nullable()->unique();
             $table->string('description')->nullable();
             $table->integer('sort')->default(0);
             $table->boolean('status')->default(true);

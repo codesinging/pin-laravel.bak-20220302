@@ -5,9 +5,9 @@ namespace Tests\Feature\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\Admin;
-use App\Models\AdminPermissionPermission;
+use App\Models\AdminPermission;
 use App\Models\AdminRole;
-use App\Support\Permission\PermissionName;
+use App\Support\Permission\PermissionBuilder;
 use App\Support\Routing\RouteParser;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -132,7 +132,7 @@ class AdminControllerTest extends TestCase
         self::assertEquals('admin_super', $superAdmin['username']);
         self::assertEquals('Admin_Super', $superAdmin['name']);
 
-        $permission = PermissionName::fromRoute(AdminController::class.'@update');
+        $permission = PermissionBuilder::fromRoute(AdminController::class.'@update');
         $commonAdmin->givePermissionTo($permission);
 
         // 一般管理员无法修改超级管理员的信息
@@ -197,7 +197,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermissionPermission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $commonAdmin = $this->commonAdmin();
@@ -232,7 +232,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermissionPermission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -270,7 +270,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermissionPermission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -301,7 +301,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermissionPermission::create($testPermission);
+            AdminPermission::create($testPermission);
         }
 
         $admin = $this->admin();

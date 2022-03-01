@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Controllers\Admin;
 
-use App\Models\AdminPermissionPermission;
+use App\Models\AdminPermission;
 use App\Models\AdminPermissionRole;
 use App\Models\AdminRole;
 use Exception;
@@ -39,7 +39,7 @@ class RoleControllerTest extends TestCase
 
         self::assertEquals($data['description'], $role['description']);
         self::assertEquals($data['name'], $role['role']['name']);
-        self::assertEquals($role['permission_role_id'], $role['role']['id']);
+        self::assertEquals($role['role_id'], $role['role']['id']);
     }
 
     public function testUpdate()
@@ -81,7 +81,7 @@ class RoleControllerTest extends TestCase
             ->assertOk();
 
         self::assertNull(AdminRole::find($role['id']));
-        self::assertNull(AdminPermissionRole::find($role['permission_role_id']));
+        self::assertNull(AdminPermissionRole::find($role['role_id']));
     }
 
     /**
@@ -105,11 +105,11 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermissionPermission::create($permission);
+            AdminPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
-        $role1 = AdminRole::query()->where('permission_role_id', $permissionRole1['id'])->first();
+        $role1 = AdminRole::query()->where('role_id', $permissionRole1['id'])->first();
 
         self::assertFalse($permissionRole1->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
 
@@ -148,11 +148,11 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermissionPermission::create($permission);
+            AdminPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
-        $role1 = AdminRole::query()->where('permission_role_id', $permissionRole1['id'])->first();
+        $role1 = AdminRole::query()->where('role_id', $permissionRole1['id'])->first();
 
         self::assertFalse($permissionRole1->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
 
@@ -195,11 +195,11 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermissionPermission::create($permission);
+            AdminPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
-        $role1 = AdminRole::query()->where('permission_role_id', $permissionRole1['id'])->first();
+        $role1 = AdminRole::query()->where('role_id', $permissionRole1['id'])->first();
 
         self::assertFalse($permissionRole1->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
 
@@ -247,11 +247,11 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermissionPermission::create($permission);
+            AdminPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
-        $role1 = AdminRole::query()->where('permission_role_id', $permissionRole1['id'])->first();
+        $role1 = AdminRole::query()->where('role_id', $permissionRole1['id'])->first();
 
         self::assertFalse($permissionRole1->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
 

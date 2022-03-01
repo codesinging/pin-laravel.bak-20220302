@@ -10,14 +10,12 @@ use Illuminate\Routing\Route as RouteClass;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Pure;
 
 class RouteParser
 {
     protected RouteClass $route;
 
     protected ?string $class;
-    protected ?string $module;
     protected ?string $controller;
     protected ?string $action;
 
@@ -64,17 +62,7 @@ class RouteParser
 
         $this->class = $class;
         $this->action = $action;
-
-        $name = Str::after($class, 'App\\Http\\Controllers\\');
-        $name = Str::beforeLast($name, 'Controller');
-
-        if (str_contains($name, '\\')) {
-            $this->controller = Str::afterLast($name, '\\');
-            $this->module = Str::beforeLast($name, '\\');
-        } else {
-            $this->controller = $name;
-            $this->module = '';
-        }
+        $this->controller = Str::of($class)->after('App\\Http\\Controllers\\')->beforeLast('Controller')->replace('\\', '/');
     }
 
     /**
@@ -83,14 +71,6 @@ class RouteParser
     public function class(): ?string
     {
         return $this->class;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function module(): ?string
-    {
-        return $this->module;
     }
 
     /**

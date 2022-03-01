@@ -9,7 +9,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
 use App\Models\AdminMenu;
-use App\Support\Permission\PermissionName;
+use App\Support\Permission\PermissionBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,8 +88,8 @@ class AuthController extends Controller
 
         if (!$admin->isSuper()) {
             $menuIds = $admin->getAllPermissions()
-                ->filter(fn($permission) => PermissionName::isMenu($permission['name']))
-                ->map(fn($permission) => PermissionName::menuId($permission['name']))
+                ->filter(fn($permission) => PermissionBuilder::isMenu($permission['name']))
+                ->map(fn($permission) => PermissionBuilder::menuId($permission['name']))
                 ->toArray();
 
             $menu = $menu->whereIn('id', $menuIds);

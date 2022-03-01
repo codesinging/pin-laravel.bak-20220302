@@ -96,7 +96,7 @@ class RoleController extends Controller
      */
     public function givePermissions(AdminRole $role, Request $request): JsonResponse
     {
-        $role->permissionRole()->givePermissionTo(Arr::wrap($request->get('permissions')));
+        $role->relatedRole()->givePermissionTo(Arr::wrap($request->get('permissions')));
         return $this->success('分配权限成功');
     }
 
@@ -110,7 +110,7 @@ class RoleController extends Controller
      */
     public function revokePermissions(AdminRole $role, Request $request): JsonResponse
     {
-        $role->permissionRole()->revokePermissionTo(Arr::wrap($request->get('permissions')));
+        $role->relatedRole()->revokePermissionTo(Arr::wrap($request->get('permissions')));
         return $this->success('移除权限成功');
     }
 
@@ -124,7 +124,7 @@ class RoleController extends Controller
      */
     public function syncPermissions(AdminRole $role, Request $request): JsonResponse
     {
-        $role->permissionRole()->syncPermissions(Arr::wrap($request->get('permissions')));
+        $role->relatedRole()->syncPermissions(Arr::wrap($request->get('permissions')));
         return $this->success('设置权限成功');
     }
 
@@ -137,7 +137,7 @@ class RoleController extends Controller
      */
     public function permissions(AdminRole $role): JsonResponse
     {
-        $permissions = $role->permissionRole()->getAllPermissions();
+        $permissions = $role->relatedRole()->getAllPermissions();
 
         return $this->success('获取权限成功', $permissions->toArray());
     }
