@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\AdminMenu;
 use App\Models\AdminPermission;
-use App\Models\AdminRule;
 use App\Support\Permission\PermissionName;
+use App\Support\Reflection\ClassReflection;
+use App\Support\Routing\RouteParser;
 use Illuminate\Database\Seeder;
+use Illuminate\Routing\Route;
+use ReflectionException;
 
 class AdminPermissionSeeder extends Seeder
 {
@@ -14,34 +16,55 @@ class AdminPermissionSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     * @throws ReflectionException
      */
     public function run()
     {
-        $this->routePermission();
-        $this->menuPermission();
+        $this->parsePermissions('api/admin');
     }
 
     /**
-     * @return void
+     * @throws ReflectionException
      */
-    private function routePermission(): void
+    protected function parsePermissions(string $prefix)
     {
-        $rules = AdminRule::all();
+        $routes = RouteParser::routes($prefix);
 
-        foreach ($rules as $rule) {
-            AdminPermission::findOrCreate($rule['name']);
+        foreach ($routes as $route) {
+            $this->parseRoute($route);
         }
     }
 
     /**
-     * @return void
+     * @throws ReflectionException
      */
-    private function menuPermission(): void
+    protected function parseRoute(Route $route)
     {
-        $menus = AdminMenu::all();
+        $parser = new RouteParser($route);
 
-        foreach ($menus as $menu) {
-            AdminPermission::findOrCreate(PermissionName::fromMenu($menu));
+        $reflection = new ClassReflection($parser->class());
+
+        $controllerTitle = $reflection->classTitle();
+        $actionTitle = $reflection->methodTitle($parser->action());
+
+        if (!is_null($controllerTitle) && !is_null($actionTitle)){
+
+            $name = PermissionName::fromRouteParser($parser);
+
+            $data = [
+                'module' => $parser->module(),
+                'controller' => $parser->controller(),
+                'action' => $parser->action(),
+                'controller_title' => $controllerTitle,
+                'action_title' => $actionTitle,
+            ];
+
+            $this->syncPermissions($name, $data);
         }
+    }
+
+    protected function syncPermissions(string $name, array $data)
+    {
+        (new AdminPermission())->updateOrCreate(['name' => $name], $data);
     }
 }

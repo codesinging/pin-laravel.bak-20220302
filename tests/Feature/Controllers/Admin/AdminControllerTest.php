@@ -5,7 +5,7 @@ namespace Tests\Feature\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\Admin;
-use App\Models\AdminPermission;
+use App\Models\AdminPermissionPermission;
 use App\Models\AdminRole;
 use App\Support\Permission\PermissionName;
 use App\Support\Routing\RouteParser;
@@ -197,7 +197,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermission::create($testPermission);
+            AdminPermissionPermission::create($testPermission);
         }
 
         $commonAdmin = $this->commonAdmin();
@@ -232,7 +232,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermission::create($testPermission);
+            AdminPermissionPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -270,7 +270,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermission::create($testPermission);
+            AdminPermissionPermission::create($testPermission);
         }
 
         $admin = $this->admin();
@@ -301,7 +301,7 @@ class AdminControllerTest extends TestCase
         ];
 
         foreach ($testPermissions as $testPermission) {
-            AdminPermission::create($testPermission);
+            AdminPermissionPermission::create($testPermission);
         }
 
         $admin = $this->admin();

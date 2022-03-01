@@ -4,7 +4,7 @@ namespace Tests\Feature\Database\Seeders;
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Models\AdminMenu;
-use App\Models\AdminPermission;
+use App\Models\AdminPermissionPermission;
 use App\Support\Permission\PermissionName;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,12 +16,12 @@ class AdminPermissionSeederTest extends TestCase
     public function testRoutePermission()
     {
         $route = AuthController::class . '@login';
-        self::assertNotNull(AdminPermission::query()->where('name', PermissionName::fromRoute($route))->first());
+        self::assertNotNull(AdminPermissionPermission::query()->where('name', PermissionName::fromRoute($route))->first());
     }
 
     public function testMenuPermission()
     {
         $menu = AdminMenu::query()->first();
-        self::assertNotNull(AdminPermission::query()->where('name', PermissionName::fromMenu($menu))->first());
+        self::assertNotNull(AdminPermissionPermission::query()->where('name', PermissionName::fromMenu($menu))->first());
     }
 }

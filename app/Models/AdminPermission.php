@@ -1,14 +1,18 @@
 <?php
-/**
- * Author: codesinging <codesinging@gmail.com>
- * Github: https://github.com/codesinging
- */
 
 namespace App\Models;
 
-use Spatie\Permission\Models\Permission;
+use App\Support\Model\BaseModel;
 
-class AdminPermission extends Permission
+class AdminPermission extends BaseModel
 {
-    protected string $guard_name = 'sanctum';
+    protected $fillable = [
+        'name',
+        'guard',
+        'module',
+        'controller',
+        'action',
+        'controller_title',
+        'action_title',
+    ];
 }

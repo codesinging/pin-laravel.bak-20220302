@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Controllers\Admin;
 
-use App\Models\AdminPermission;
+use App\Models\AdminPermissionPermission;
 use App\Models\AdminPermissionRole;
 use App\Models\AdminRole;
 use Exception;
@@ -105,7 +105,7 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermission::create($permission);
+            AdminPermissionPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
@@ -148,7 +148,7 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermission::create($permission);
+            AdminPermissionPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
@@ -195,7 +195,7 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermission::create($permission);
+            AdminPermissionPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
@@ -247,7 +247,7 @@ class RoleControllerTest extends TestCase
         ];
 
         foreach ($permissions as $permission) {
-            AdminPermission::create($permission);
+            AdminPermissionPermission::create($permission);
         }
 
         $permissionRole1 = AdminPermissionRole::findByName('role1');
