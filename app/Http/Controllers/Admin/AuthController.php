@@ -9,7 +9,6 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
 use App\Models\AdminMenu;
-use App\Support\Model\AuthModel;
 use App\Support\Permission\PermissionBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -53,7 +52,7 @@ class AuthController extends Controller
             return $this->error('账号状态异常', ErrorCode::AUTH_USER_STATUS_ERROR);
         }
 
-        $token = $admin->createToken('admin_' . $admin['id'])->plainTextToken;
+        $token = $admin->createToken($request->get('device', ''))->plainTextToken;
 
         return $this->success('登录成功', compact('admin', 'token'));
     }
@@ -67,7 +66,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        if (method_exists($token = $request->user()->currentAccessToken(), 'delete')){
+        if (method_exists($token = $request->user()->currentAccessToken(), 'delete')) {
             $token->delete();
         }
         return $this->success('注销登录成功');

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -19,7 +18,7 @@ class PersonalAccessTokenSeeder extends Seeder
         PersonalAccessToken::query()->create([
             'tokenable_type' => 'App\Models\Admin',
             'tokenable_id' => 1,
-            'name' => 'admin_1',
+            'name' => '',
             'token' => '63c60463dbed8753ad859ecd15985b71a9b8a4d1f3d70a79f62db6e025aac1af',
             'abilities' => ["*"]
         ]);
