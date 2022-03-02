@@ -12,6 +12,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
+        "matomo/device-detector": "^5.0",
         "overtrue/laravel-lang": "^6.0",
         "spatie/laravel-permission": "^5.5"
     },

@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
 use App\Models\AdminMenu;
+use App\Support\Model\AuthModel;
 use App\Support\Permission\PermissionBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -66,9 +67,32 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        if (method_exists($token = $request->user()->currentAccessToken(), 'delete')) {
-            $token->delete();
+        /** @var AuthModel $user */
+        $user = $request->user();
+
+        $type = $request->get('type');
+        $device = $request->get('device');
+
+        if ($type === 'other') {
+            // 注销其它设备登录，需要当前设备参数
+            if ($device) {
+                // 删除所有当前登录用户的非当前设备的 token
+                $user->tokens()->where('tokenable_id', $user['id'])->where('name', '<>', $device)->delete();
+            }
+        } elseif ($type === 'all') {
+            // 注销全部设备登录
+            $user->tokens()->where('tokenable_id', $user['id'])->delete();
+        } else {
+            // 注销指定设备的登录
+            if ($device) {
+                // 删除当前登录用户的指定设备的全部 token
+                $user->tokens()->where('tokenable_id', $user['id'])->where('name', $device)->delete();
+            } else {
+                // 只删除当前登录的 token
+                method_exists($token = $user->currentAccessToken(), 'delete') and $token->delete();
+            }
         }
+
         return $this->success('注销登录成功');
     }
 
