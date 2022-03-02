@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\ErrorCode;
 use App\Models\Admin;
 use App\Models\AdminMenu;
+use App\Support\Model\AuthModel;
 use App\Support\Permission\PermissionBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -55,6 +56,21 @@ class AuthController extends Controller
         $token = $admin->createToken('admin_' . $admin['id'])->plainTextToken;
 
         return $this->success('登录成功', compact('admin', 'token'));
+    }
+
+    /**
+     * @title 注销登录
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        if (method_exists($token = $request->user()->currentAccessToken(), 'delete')){
+            $token->delete();
+        }
+        return $this->success('注销登录成功');
     }
 
     /**

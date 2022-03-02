@@ -39,7 +39,7 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('code', ErrorCode::AUTH_PASSWORD_NOT_MATCHED);
 
         // 测试账号状态异常
-        $admin = Admin::first();
+        $admin = $this->admin();
         $admin->update(['status' => false]);
 
         $this->postJson('api/admin/auth/login', ['username' => $admin['username'], 'password' => 'admin.123'])
@@ -54,6 +54,13 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('code', ErrorCode::OK)
             ->assertJsonStructure(['code', 'data' => ['admin', 'token']])
             ->assertJsonPath('data.admin.username', 'admin');
+    }
+
+    public function testLogout()
+    {
+        $this->actingAsAdmin()
+            ->getJson('api/admin/auth/logout')
+            ->assertOk();
     }
 
     public function testUser()
@@ -75,7 +82,7 @@ class AuthControllerTest extends TestCase
 
         $commonAdmin = $this->commonAdmin();
 
-        $commonAdmin->givePermissionTo(PermissionBuilder::fromRoute(AuthController::class.'@menus'));
+        $commonAdmin->givePermissionTo(PermissionBuilder::fromRoute(AuthController::class . '@menus'));
 
         $this->actingAsCommonAdmin()
             ->getJson('api/admin/auth/menus')
